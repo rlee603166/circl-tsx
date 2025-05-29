@@ -1,9 +1,9 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* 🌐 CSS Variables and Theme */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -83,9 +83,7 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -95,33 +93,70 @@
     font-feature-settings: "cv11", "ss01";
     font-variation-settings: "opsz" 32;
   }
+
+  /* 🧱 From App.css */
+  #root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+  }
+
+  .logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+  }
+
+  .logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+  }
+
+  .card {
+    padding: 2em;
+  }
+
+  .read-the-docs {
+    color: #888;
+  }
 }
 
 @layer utilities {
   .fade-in-up {
     animation: fadeInUp 0.6s ease-out forwards;
   }
-  
+
   .glass-effect {
     @apply backdrop-blur-xl bg-white/10 border border-white/20;
   }
-  
+
   .neumorphic-button {
     @apply bg-gradient-to-br from-gray-50 to-gray-100 shadow-[inset_-2px_-2px_5px_rgba(255,255,255,0.7),inset_2px_2px_5px_rgba(0,0,0,0.1)] border border-gray-200/50;
   }
-  
+
   .neumorphic-button:hover {
     @apply shadow-[inset_-1px_-1px_3px_rgba(255,255,255,0.8),inset_1px_1px_3px_rgba(0,0,0,0.15)] bg-gradient-to-br from-gray-100 to-gray-200;
   }
-  
+
   .thinking-dots {
     animation: thinking 1.4s infinite ease-in-out;
   }
-  
-  .thinking-dots:nth-child(1) { animation-delay: -0.32s; }
-  .thinking-dots:nth-child(2) { animation-delay: -0.16s; }
+
+  .thinking-dots:nth-child(1) {
+    animation-delay: -0.32s;
+  }
+
+  .thinking-dots:nth-child(2) {
+    animation-delay: -0.16s;
+  }
 }
 
+/* 🌀 Animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -141,5 +176,20 @@
   40% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

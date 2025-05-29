@@ -1,42 +1,33 @@
-
-
 "use client";
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { Search, Download, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-// Mock auth hook for now - this would be replaced with actual auth logic
-const useAuth = () => {
-  return {
-    loading: false,
-    isAuthenticated: false,
-    user: null,
-    logout: () => console.log('logout')
-  };
-};
+import { useAuth } from "@/hooks/useAuth";
+import "./styles/Header.css";
 
 const UnauthenticatedButtons = ({ navigate }: { navigate: any }) => {
-    const handleLogin = () => {
-        navigate("/log-in");
+        const handleLogin = () => {
+        router.push("/log-in");
     };
 
     const handleSignup = () => {
-        navigate("/create-account");
+        router.push("/create-account");
     };
 
     return (
         <div className="flex gap-3">
             <button
                 onClick={handleLogin}
-                className="px-5 py-2 bg-white text-gray-900 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors duration-200 text-sm font-light"
+                className="px-5 py-2 bg-white text-gray-900 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors duration-200 text-sm"
             >
                 Log in
             </button>
             <button
                 onClick={handleSignup}
-                className="px-5 py-2 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors duration-200 text-sm font-light"
+                className="px-5 py-2 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors duration-200 text-sm"
             >
                 Sign up
             </button>
@@ -45,7 +36,7 @@ const UnauthenticatedButtons = ({ navigate }: { navigate: any }) => {
 };
 
 const AuthenticatedButtons = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
-    const getInitials = (user: any) => {
+   const getInitials = user => {
         if (user?.firstName && user?.lastName) {
             return `${user.firstName[0]}${user.lastName[0]}`;
         }
@@ -55,29 +46,37 @@ const AuthenticatedButtons = ({ user, onLogout }: { user: any; onLogout: () => v
         return "U";
     };
 
+    const handleLogout = async () => {
+        try {
+            // Clear your custom JWT tokens
+            onLogout();
+            // Sign out from NextAuth (Google session)
+            await signOut({ redirect: false });
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
+    };
+
     return (
         <>
-            <Button variant="ghost" size="icon" className="neumorphic-button p-2 rounded-lg transition-all duration-200 hover:scale-105">
-                <Search className="w-4 h-4 text-gray-600" strokeWidth={1.5} />
+            <Button variant="ghost" size="icon" className="header-button">
+                <Search className="icon-small" />
             </Button>
-            <Button variant="ghost" size="icon" className="neumorphic-button p-2 rounded-lg transition-all duration-200 hover:scale-105">
-                <Download className="w-4 h-4 text-gray-600" strokeWidth={1.5} />
+            <Button variant="ghost" size="icon" className="header-button">
+                <Download className="icon-small" />
             </Button>
             <div className="flex items-center gap-2">
-                <div 
-                    className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium"
-                    title={user?.name || user?.email}
-                >
+                <div className="avatar" title={user?.name || user?.email}>
                     {getInitials(user)}
                 </div>
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="neumorphic-button p-2 rounded-lg transition-all duration-200 hover:scale-105"
-                    onClick={onLogout}
+                    className="header-button"
+                    onClick={handleLogout}
                     title="Logout"
                 >
-                    <LogOut className="w-4 h-4 text-gray-600" strokeWidth={1.5} />
+                    <LogOut className="icon-small" />
                 </Button>
             </div>
         </>
@@ -92,27 +91,23 @@ const LoadingButtons = () => (
 );
 
 export default function Header() {
-    const navigate = useNavigate();
+    const router = useRouter();
     const { loading, isAuthenticated, user, logout } = useAuth();
 
     return (
-        <header className="fixed top-0 right-0 left-80 h-16 glass-effect border-b border-gray-200/30 z-30 flex items-center justify-between px-6 backdrop-blur-xl">
-            <div 
-                className="cursor-pointer flex items-center"
-                onClick={() => navigate("/")}
-            >
-                <span className="text-2xl font-light text-gray-800 tracking-tight">circl.</span>
+        <header className="chat-header">
+            <div className="logo-container" onClick={() => router.push("/")}>
+                <span className="app-title">circl.</span>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="header-actions">
                 {loading ? (
                     <LoadingButtons />
                 ) : isAuthenticated ? (
                     <AuthenticatedButtons user={user} onLogout={logout} />
                 ) : (
-                    <UnauthenticatedButtons navigate={navigate} />
+                    <UnauthenticatedButtons router={router} />
                 )}
             </div>
         </header>
     );
 }
-

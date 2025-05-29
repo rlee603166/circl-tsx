@@ -1,4 +1,4 @@
-
+"use client";
 import React, { useState, useEffect } from 'react';
 import { ChatWindow } from '@/components/chat/ChatWindow';
 import { MessageInput } from '@/components/chat/MessageInput';
@@ -51,11 +51,9 @@ const Index = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 transition-opacity duration-600 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-      {/* Header */}
-      <Header />
-      
+
       {/* Main Layout */}
-      <div className="pt-16 h-screen">
+      <div className="h-screen">
         <ResizableLayout
           sidebar={
             <div className="hidden lg:block h-full">
