@@ -6,10 +6,12 @@ import { signOut } from "next-auth/react";
 import { Search, Download, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { PanelLeftOpen, SquarePlus } from "lucide-react";
+
 import "./styles/Header.css";
 
 const UnauthenticatedButtons = ({ navigate }: { navigate: any }) => {
-        const handleLogin = () => {
+    const handleLogin = () => {
         router.push("/log-in");
     };
 
@@ -36,7 +38,7 @@ const UnauthenticatedButtons = ({ navigate }: { navigate: any }) => {
 };
 
 const AuthenticatedButtons = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
-   const getInitials = user => {
+    const getInitials = user => {
         if (user?.firstName && user?.lastName) {
             return `${user.firstName[0]}${user.lastName[0]}`;
         }
@@ -90,13 +92,26 @@ const LoadingButtons = () => (
     </div>
 );
 
-export default function Header() {
+export default function Header({ isCollapsed, setIsCollapsed }) {
     const router = useRouter();
     const { loading, isAuthenticated, user, logout } = useAuth();
 
     return (
         <header className="chat-header">
             <div className="logo-container" onClick={() => router.push("/")}>
+                {isCollapsed && (
+                    <div className="collapsed-buttons">
+                        <PanelLeftOpen 
+                           className="w-6 h-8 text-black-600"
+                            strokeWidth={2}
+                            onClick={() => setIsCollapsed(!isCollapsed)}
+                        />
+                        <SquarePlus 
+                           className="w-6 h-8 text-black-600"
+                            strokeWidth={2}
+                        />
+                    </div>
+                )}
                 <span className="app-title">circl.</span>
             </div>
             <div className="header-actions">

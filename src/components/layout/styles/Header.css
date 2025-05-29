@@ -9,12 +9,23 @@
 }
 
 .logo-container {
-    padding-left: 10px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    cursor: pointer;
+
+    gap: 15px;
+    padding-left: 10px;
 }
 
+.collapsed-buttons {
+    display: flex;
+    flex-dirextion: row;
+    gap: 8px;
+}
+
+.app-title {
+    cursor: pointer;
+}
 
 
 .logo {
