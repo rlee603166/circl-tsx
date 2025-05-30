@@ -10,7 +10,8 @@ import { PanelLeftOpen, SquarePlus } from "lucide-react";
 
 import "./styles/Header.css";
 
-const UnauthenticatedButtons = ({ navigate }: { navigate: any }) => {
+const UnauthenticatedButtons = () => {
+    const router = useRouter();
     const handleLogin = () => {
         router.push("/log-in");
     };
