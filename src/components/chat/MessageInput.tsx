@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { ArrowUp } from "lucide-react";
+import styles from "./MessageInput.module.css";
 
 interface MessageInputProps {
     onSendMessage: (message: string) => void;
@@ -7,20 +8,26 @@ interface MessageInputProps {
 }
 
 export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disabled = false }) => {
+    const [deep, setDeep] = useState(false);
+    const [network, setNetwork] = useState(false);
     const [message, setMessage] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const MAX_HEIGHT = 200;
 
     const adjustTextareaHeight = () => {
-        const textarea = textareaRef.current;
-        if (textarea) {
-            textarea.style.height = "auto";
-            textarea.style.height = `${textarea.scrollHeight}px`;
+        const ta = textareaRef.current;
+        if (!ta) return;
+        ta.style.height = "auto";
+        if (ta.scrollHeight > MAX_HEIGHT) {
+            ta.style.height = `${MAX_HEIGHT}px`;
+            ta.style.overflowY = "auto";
+        } else {
+            ta.style.height = `${ta.scrollHeight}px`;
+            ta.style.overflowY = "hidden";
         }
     };
 
-    useEffect(() => {
-        adjustTextareaHeight();
-    }, [message]);
+    useEffect(adjustTextareaHeight, [message]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,7 +48,12 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
         <div className="bg-white backdrop-blur-xl px-4 py-3">
             <form
                 onSubmit={handleSubmit}
-                className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2 space-x-2"
+                className="
+          flex flex-col w-full
+          bg-white dark:bg-gray-700
+          rounded-3xl px-4 py-2
+          gap-y-2 shadow-md
+        "
             >
                 <textarea
                     ref={textareaRef}
@@ -51,17 +63,51 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                     placeholder="Type your message..."
                     disabled={disabled}
                     rows={1}
-                    className="flex-1 bg-transparent resize-none outline-none px-2 py-1 text-gray-800 placeholder-gray-500 dark:placeholder-gray-400"
-                    style={{ lineHeight: "1.4", maxHeight: "200px" }}
+                    className={`
+            w-full bg-transparent resize-none outline-none
+            px-2 py-1 text-gray-800 placeholder-gray-500
+            dark:placeholder-gray-400 ${styles.textarea}
+          `}
+                    style={{ lineHeight: "1.4" }}
                 />
-                <div className="flex items-center space-x-2">
-                    {/* Add more buttons here and they'll sit inside the pill */}
+
+                <div className="flex items-center justify-between mt-2">
+                    <div className="flex space-x-2">
+                        <button
+                            type="button"
+                            onClick={() => setDeep(p => !p)}
+                            className={`
+                px-4 py-1 rounded-full text-sm transition-colors
+                ${
+                    deep
+                        ? "bg-blue-50 border border-blue-200/50"
+                        : "bg-gray-100 text-black hover:bg-blue-50"
+                }
+              `}
+                        >
+                            Deep Search
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setNetwork(p => !p)}
+                            className={`
+                px-4 py-1 rounded-full text-sm transition-colors
+                ${
+                    network
+                        ? "bg-blue-50 border border-blue-200/50"
+                        : "bg-gray-100 text-black hover:bg-blue-50"
+                }
+              `}
+                        >
+                            Network Search
+                        </button>
+                    </div>
                     <button
                         type="submit"
                         disabled={!message.trim() || disabled}
-                        className="p-2 bg-blue-600 text-white rounded-full transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-2 bg-blue-600 text-white rounded-full transition-transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <Send className="w-5 h-5" strokeWidth={1.5} />
+                        <ArrowUp className="w-5 h-5" strokeWidth={1.5} />
                     </button>
                 </div>
             </form>

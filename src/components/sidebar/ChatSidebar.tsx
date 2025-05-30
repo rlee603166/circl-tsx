@@ -49,7 +49,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 <div className="flex flex-col h-full">
                     {/* Header */}
                     <div className="p-4 border-b border-gray-200/30 px-2">
-                        <div className="flex items-center justify-between mb-2 px-3">
+                        <div className="flex items-center justify-between mb-2 pl-3">
                             <h2 className="text-lg font-medium text-gray-800">Conversations</h2>
                             <div
                                 className="flex items-center space-x-2 hover:bg-[#ebebeb] focus:bg-[#ebebeb] cursor-pointer p-[4px] px-[6px] rounded-md"
