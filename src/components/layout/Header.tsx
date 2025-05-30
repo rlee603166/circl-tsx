@@ -98,21 +98,27 @@ export default function Header({ isCollapsed, setIsCollapsed }) {
 
     return (
         <header className="chat-header">
-            <div className="logo-container" onClick={() => router.push("/")}>
+            <div
+                className={`logo-container  ${isCollapsed ? "p-[11px]" : "p-[16px]"}`}
+                onClick={() => router.push("/")}
+            >
                 {isCollapsed && (
                     <div className="collapsed-buttons">
-                        <PanelLeftOpen 
-                           className="w-6 h-8 text-black-600"
-                            strokeWidth={2}
+                        <div
+                            className="hover:bg-[#ebebeb] focus:bg-[#ebebeb] cursor-pointer p-[4px] px-[6px] rounded-md"
                             onClick={() => setIsCollapsed(!isCollapsed)}
-                        />
-                        <SquarePlus 
-                           className="w-6 h-8 text-black-600"
-                            strokeWidth={2}
-                        />
+                        >
+                            <PanelLeftOpen className="w-5 h-6 text-gray-600" strokeWidth={2} />
+                        </div>
+                        <div
+                            className="hover:bg-[#ebebeb] focus:bg-[#ebebeb] cursor-pointer p-[4px] px-[6px] rounded-md"
+                            // onClick={() => setIsCollapsed(!isCollapsed)}
+                        >
+                            <SquarePlus className="w-5 h-6 text-gray-600" strokeWidth={2} />
+                        </div>
                     </div>
                 )}
-                <span className="app-title">circl.</span>
+                <div className="app-title">circl.</div>
             </div>
             <div className="header-actions">
                 {loading ? (
@@ -120,7 +126,9 @@ export default function Header({ isCollapsed, setIsCollapsed }) {
                 ) : isAuthenticated ? (
                     <AuthenticatedButtons user={user} onLogout={logout} />
                 ) : (
-                    <UnauthenticatedButtons router={router} />
+                    <div className="auth-buttons">
+                        <UnauthenticatedButtons router={router} />
+                    </div>
                 )}
             </div>
         </header>

@@ -75,23 +75,29 @@ const Index = () => {
                         </div>
                     }
                     chatWindow={
-                        <div className="flex flex-col h-full">
-                            {/* Mobile Header for sidebar toggle */}
-                            <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200/30 glass-effect">
-                                <h1 className="text-xl font-medium text-gray-800">Circl</h1>
-                                <button
-                                    onClick={() => setIsSidebarOpen(true)}
-                                    className="neumorphic-button p-2 rounded-lg transition-all duration-200 hover:scale-105"
-                                >
-                                    <Menu className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
-                                </button>
+                        <div className="flex flex-col h-full bg-white">
+                            {/* Centered container with max‑width */}
+                            <div className="flex flex-col h-full w-full max-w-[750px] mx-auto">
+                                {/* Mobile Header for sidebar toggle */}
+                                <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200/30 glass-effect">
+                                    <h1 className="text-xl font-medium text-gray-800">Circl</h1>
+                                    <button
+                                        onClick={() => setIsSidebarOpen(true)}
+                                        className="neumorphic-button p-2 rounded-lg transition-all duration-200 hover:scale-105"
+                                    >
+                                        <Menu className="w-5 h-5 text-gray-600" strokeWidth={1.5} />
+                                    </button>
+                                </div>
+
+                                {/* Chat Window */}
+                                <ChatWindow messages={activeConversation?.messages || []} />
+
+                                {/* Message Input */}
+                                <MessageInput
+                                    onSendMessage={handleSendMessage}
+                                    disabled={isLoading}
+                                />
                             </div>
-
-                            {/* Chat Window */}
-                            <ChatWindow messages={activeConversation?.messages || []} />
-
-                            {/* Message Input */}
-                            <MessageInput onSendMessage={handleSendMessage} disabled={isLoading} />
                         </div>
                     }
                     artifactPanel={

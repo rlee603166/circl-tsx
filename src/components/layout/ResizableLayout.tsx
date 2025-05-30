@@ -29,7 +29,7 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
             {/* Main area: header + chat/artifact */}
             <div className="flex-1 flex flex-col h-full overflow-hidden">
                 {/* Header sits above chat/artifact, but to the right of the sidebar */}
-                <div className="h-16 border-b border-gray-200/30 glass-effect">
+                <div className="h-16 bg-white">
                     <Header 
                         isCollapsed={isCollapsed}
                         setIsCollapsed={setIsCollapsed}
