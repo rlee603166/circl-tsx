@@ -53,6 +53,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                     bg-white dark:bg-gray-700
                     rounded-3xl px-6 py-3
                     gap-y-2 shadow-md
+                    border border-solid border-gray-200 rounded-3xl
                 "
             >
                 <textarea
