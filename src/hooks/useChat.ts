@@ -1,156 +1,162 @@
-
-import { useState, useCallback } from 'react';
-import { Message, Conversation, Professional, SearchResult } from '@/types';
+import { useState, useCallback } from "react";
+import { Session, User, SearchResult, SingleMessage, CreateMessage } from "@/types";
+import { useRouter } from "next/navigation";
+import { searchService } from "@/services/searchService";
 
 export const useChat = () => {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
-  const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+    const [sessions, setSessions] = useState<Session[]>([]);
+    const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+    const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [messages, setMessages] = useState<SingleMessage[]>([]);
 
-  const activeConversation = conversations.find(c => c.id === activeConversationId);
+    const router = useRouter();
+    const activeSession = sessions.find(c => c.sessionID === activeSessionId);
 
-  const generateId = () => Math.random().toString(36).substr(2, 9);
+    const generateId = () => Math.random().toString(36).substr(2, 9);
 
-  const createNewConversation = useCallback(() => {
-    const newConversation: Conversation = {
-      id: generateId(),
-      title: 'New Conversation',
-      messages: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    
-    setConversations(prev => [newConversation, ...prev]);
-    setActiveConversationId(newConversation.id);
-    setSearchResult(null);
-    
-    return newConversation.id;
-  }, []);
+    const addToSessionList = useCallback((newSession: Session) => {
+        setSessions(prev => [newSession, ...prev]);
+    }, []);
 
-  const sendMessage = useCallback(async (content: string) => {
-    if (!activeConversationId) return;
+    const createNewSession = useCallback(() => {
+        setActiveSessionId(null);
+        setSearchResult(null);
+        setMessages([]);
+    }, []);
 
-    setIsLoading(true);
+    const updateMessages = useCallback((content: string, role: string) => {
+        if (!activeSessionId) return;
+        
+        const newMessage: CreateMessage = {
+            role,
+            content,
+        };
 
-    // Add user message
-    const userMessage: Message = {
-      id: generateId(),
-      content,
-      isUser: true,
-      timestamp: new Date(),
-    };
+        // [TODO]: Send api request to create message in the backend
 
-    // Add thinking indicator
-    const thinkingMessage: Message = {
-      id: generateId(),
-      content: '',
-      isUser: false,
-      timestamp: new Date(),
-      isThinking: true,
-      thinkingText: 'Analyzing your request and searching for matching professionals...',
-    };
+        const fromBackend: SingleMessage = {
+            messageID: generateId(),
+            sessionID: activeSessionId,
+            role,
+            content,
+            createdAt: new Date(),
+        };
+        
+        setMessages(prev => [...prev, fromBackend]);
+    }, [activeSessionId]);
 
-    setConversations(prev =>
-      prev.map(conv =>
-        conv.id === activeConversationId
-          ? {
-              ...conv,
-              messages: [...conv.messages, userMessage, thinkingMessage],
-              title: conv.messages.length === 0 ? content.slice(0, 50) + '...' : conv.title,
-              updatedAt: new Date(),
+    const streamThought = useCallback((chunk: string) => {
+        setMessages(prevMessages => {
+            const newMessages = [...prevMessages];
+            if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === "assistant") {
+                // Update existing assistant message
+                const lastMessage = newMessages[newMessages.length - 1];
+                newMessages[newMessages.length - 1] = {
+                    ...lastMessage,
+                    content: lastMessage.content + chunk
+                };
+            } else {
+                // Create new assistant message
+                newMessages.push({
+                    messageID: generateId(),
+                    sessionID: activeSessionId,
+                    role: "assistant",
+                    content: chunk,
+                    createdAt: new Date(),
+                });
             }
-          : conv
-      )
+            return newMessages;
+        });
+    }, [activeSessionId]);
+
+    const streamResponse = useCallback((chunk: string) => {
+        setMessages(prevMessages => {
+            const newMessages = [...prevMessages];
+            const lastMessage = newMessages[newMessages.length - 1];
+            
+            // Update the content of the last message
+            newMessages[newMessages.length - 1] = {
+                ...lastMessage,
+                content: lastMessage.content + chunk
+            };
+            
+            return newMessages;
+        });
+    }, []);
+
+    const sendMessage = useCallback(
+        async (
+            content: string,
+            setUsersFound: (prev: User[]) => void
+        ) => {
+            if (!activeSessionId) return;
+            
+            // Add user message immediately
+            updateMessages(content, "user");
+            
+            setIsLoading(true);
+            const collected: any[] = [];
+            try {
+                await searchService.search(activeSessionId, content, {
+                    onThought: streamThought,
+                    onResponse: streamResponse,
+                    onFoundUsers: (message: string) => {
+                        collected.push(message);
+                        setUsersFound([...collected]);
+                    },
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [activeSessionId, streamThought, streamResponse, updateMessages]
     );
 
-    // Simulate API call and streaming response
-    setTimeout(() => {
-      // Mock response
-      const aiResponse: Message = {
-        id: generateId(),
-        content: `I found several professionals matching your criteria for "${content}". Here are the most relevant matches based on your search parameters. Each profile includes their expertise, current role, and contact information.`,
-        isUser: false,
-        timestamp: new Date(),
-      };
-
-      // Mock search results
-      const mockProfessionals: Professional[] = [
-        {
-          id: '1',
-          name: 'Sarah Chen',
-          title: 'Senior Data Scientist',
-          company: 'TechCorp Inc.',
-          location: 'San Francisco, CA',
-          email: 'sarah.chen@techcorp.com',
-          linkedin: 'https://linkedin.com/in/sarahchen',
-          expertise: ['Machine Learning', 'Python', 'Data Analytics', 'AI Research'],
-          avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b887?w=150&h=150&fit=crop&crop=face'
-        },
-        {
-          id: '2',
-          name: 'Michael Rodriguez',
-          title: 'Product Manager',
-          company: 'InnovateLabs',
-          location: 'New York, NY',
-          email: 'm.rodriguez@innovatelabs.com',
-          expertise: ['Product Strategy', 'User Research', 'Agile', 'Analytics'],
-        },
-        {
-          id: '3',
-          name: 'Emily Watson',
-          title: 'UX Designer',
-          company: 'DesignStudio',
-          location: 'Austin, TX',
-          expertise: ['UI/UX Design', 'Figma', 'User Research', 'Prototyping'],
+    const loadSessionMessages = useCallback(async (sessionId: string) => {
+        try {
+            const pastMessages = await searchService.loadSession(sessionId);
+            if (pastMessages && pastMessages.length > 0) {
+                setMessages(pastMessages);
+            } else {
+                setMessages([]);
+            }
+        } catch (error) {
+            console.error("Error loading session messages:", error);
+            setMessages([]);
         }
-      ];
+    }, []);
 
-      const newSearchResult: SearchResult = {
-        professionals: mockProfessionals,
-        query: content,
-        totalCount: mockProfessionals.length,
-      };
+    const selectSession = useCallback(async (id: string) => {
+        setActiveSessionId(id);
+        setSearchResult(null);
+        await loadSessionMessages(id);
+    }, [loadSessionMessages]);
 
-      setConversations(prev =>
-        prev.map(conv =>
-          conv.id === activeConversationId
-            ? {
-                ...conv,
-                messages: [...conv.messages.filter(m => !m.isThinking), aiResponse],
-                updatedAt: new Date(),
-              }
-            : conv
-        )
-      );
+    const deleteSession = useCallback(
+        (id: string) => {
+            setSessions(prev => prev.filter(c => c.sessionID !== id));
+            if (activeSessionId === id) {
+                setActiveSessionId(null);
+                setSearchResult(null);
+                setMessages([]);
+            }
+        },
+        [activeSessionId]
+    );
 
-      setSearchResult(newSearchResult);
-      setIsLoading(false);
-    }, 2000);
-  }, [activeConversationId]);
-
-  const selectConversation = useCallback((id: string) => {
-    setActiveConversationId(id);
-    // You could restore search results here if needed
-    setSearchResult(null);
-  }, []);
-
-  const deleteConversation = useCallback((id: string) => {
-    setConversations(prev => prev.filter(c => c.id !== id));
-    if (activeConversationId === id) {
-      setActiveConversationId(null);
-      setSearchResult(null);
-    }
-  }, [activeConversationId]);
-
-  return {
-    conversations,
-    activeConversation,
-    searchResult,
-    isLoading,
-    createNewConversation,
-    sendMessage,
-    selectConversation,
-    deleteConversation,
-  };
+    return {
+        sessions,
+        activeSessionId,
+        activeSession,
+        messages,
+        searchResult,
+        isLoading,
+        addToSessionList,
+        createNewSession,
+        sendMessage,
+        selectSession,
+        deleteSession,
+        loadSessionMessages,
+    };
 };

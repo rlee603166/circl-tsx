@@ -9,6 +9,8 @@ interface ResizableLayoutProps {
     chatWindow: React.ReactNode;
     artifactPanel: React.ReactNode;
     showArtifactPanel: boolean;
+    isCollapsed: boolean;
+    setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ResizableLayout: React.FC<ResizableLayoutProps> = ({

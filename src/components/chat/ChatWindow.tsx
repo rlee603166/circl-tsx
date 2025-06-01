@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from "react";
-import { Message } from "@/types";
+import { SingleMessage } from "@/types";
 import { ChatMessage } from "./ChatMessage";
 
 interface ChatWindowProps {
-    messages: Message[];
+    messages: SingleMessage[];
 }
 
 export const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
@@ -32,7 +32,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
             ) : (
                 <>
                     {messages.map(message => (
-                        <ChatMessage key={message.id} message={message} />
+                        <ChatMessage key={message.messageID || message.createdAt.toString()} message={message} />
                     ))}
                     <div ref={messagesEndRef} />
                 </>

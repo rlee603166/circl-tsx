@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Conversation } from "@/types";
-import { ConversationList } from "./ConversationList";
+import { Session } from "@/types";
 import { Search, SquarePlus, X, PanelLeftClose, ChevronRight } from "lucide-react";
+import { ConversationList } from "./ConversationList";
 
 interface ChatSidebarProps {
-    conversations: Conversation[];
-    activeConversationId: string | null;
-    onSelectConversation: (id: string) => void;
-    onDeleteConversation: (id: string) => void;
-    onNewConversation: () => void;
+    sessions: Session[];
+    activeSessionId: string | null;
+    onSelectSession: (id: string) => void;
+    onDeleteSession: (id: string) => void;
+    onNewSession: () => void;
     isOpen: boolean;
     onClose: () => void;
     isCollapsed: boolean;
-    setIsCollapsed: (collapsed: boolean) => void;
+    setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ChatSidebar: React.FC<ChatSidebarProps> = ({
-    conversations,
-    activeConversationId,
-    onSelectConversation,
-    onDeleteConversation,
-    onNewConversation,
+    sessions,
+    activeSessionId,
+    onSelectSession,
+    onDeleteSession,
+    onNewSession,
     isOpen,
     onClose,
     isCollapsed,
@@ -28,8 +28,8 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 }) => {
     const [searchTerm, setSearchTerm] = useState("");
 
-    const filteredConversations = conversations.filter(conversation =>
-        conversation.title.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredsessions = sessions.filter(Session =>
+        Session.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -50,7 +50,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                     {/* Header */}
                     <div className="p-4 border-b border-gray-200/30 px-2">
                         <div className="flex items-center justify-between mb-2 pl-3">
-                            <h2 className="text-lg font-medium text-gray-800">Conversations</h2>
+                            <h2 className="text-lg font-medium text-gray-800">sessions</h2>
                             <div
                                 className="flex items-center space-x-2 hover:bg-[#ebebeb] focus:bg-[#ebebeb] cursor-pointer p-[4px] px-[6px] rounded-md"
                                 onClick={() => setIsCollapsed(!isCollapsed)}
@@ -64,7 +64,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
                         <div className="flex-col">
                             {/* “New Chat” button */}
-                            <div className="relative cursor-pointer" onClick={onNewConversation}>
+                            <div className="relative cursor-pointer" onClick={onNewSession}>
                                 <SquarePlus
                                     className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-600"
                                     strokeWidth={2}
@@ -89,7 +89,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                                 />
                                 <input
                                     type="text"
-                                    placeholder="Search conversations..."
+                                    placeholder="Search sessions..."
                                     value={searchTerm}
                                     onChange={e => setSearchTerm(e.target.value)}
                                     className="
@@ -103,20 +103,20 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                         </div>
                     </div>
 
-                    {/* Conversation List */}
+                    {/* Session List */}
                     <div className="flex-1 overflow-y-auto p-4 px-2">
-                        {filteredConversations.length === 0 ? (
+                        {filteredsessions.length === 0 ? (
                             <div className="text-center py-8">
                                 <p className="text-gray-500 text-sm font-light">
-                                    {searchTerm ? "No conversations found" : "No conversations yet"}
+                                    {searchTerm ? "No sessions found" : "No sessions yet"}
                                 </p>
                             </div>
                         ) : (
                             <ConversationList
-                                conversations={filteredConversations}
-                                activeConversationId={activeConversationId}
-                                onSelectConversation={onSelectConversation}
-                                onDeleteConversation={onDeleteConversation}
+                                sessions={filteredsessions}
+                                activeSessionId={activeSessionId}
+                                onSelectSession={onSelectSession}
+                                onDeleteSession={onDeleteSession}
                             />
                         )}
                     </div>

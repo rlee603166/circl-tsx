@@ -1,35 +1,36 @@
 
-export interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-  isThinking?: boolean;
-  thinkingText?: string;
+export interface CreateMessage {
+    role:       string;
+    content:    string;
 }
 
-export interface Professional {
-  id: string;
-  name: string;
-  title: string;
-  company: string;
-  location?: string;
-  email?: string;
-  linkedin?: string;
-  expertise?: string[];
-  avatar?: string;
+export interface SingleMessage {
+    messageID:  string | null;
+    sessionID:  string | null;
+    role:       string;
+    content:    string;
+    createdAt:  Date;
 }
 
-export interface Conversation {
-  id: string;
-  title: string;
-  messages: Message[];
-  createdAt: Date;
-  updatedAt: Date;
+export interface User {
+    userID:     string | null;
+    firstName:  string;
+    lastName:   string;
+    email:      string;
+    summary:    string
+    pfpURL:     string;
+}
+
+export interface Session {
+    sessionID:  string | null;
+    userID:     string;
+    title:      string;
+    messages:   [];
+    createdAt:  Date;
 }
 
 export interface SearchResult {
-  professionals: Professional[];
-  query: string;
-  totalCount: number;
+    professionals:  User[];
+    query:          string;
+    totalCount:     number;
 }

@@ -1,19 +1,19 @@
 import React from "react";
-import { Conversation } from "@/types";
+import { Session } from "@/types";
 import { Trash2, MessageSquare } from "lucide-react";
 
-interface ConversationListProps {
-    conversations: Conversation[];
-    activeConversationId: string | null;
-    onSelectConversation: (id: string) => void;
-    onDeleteConversation: (id: string) => void;
+interface SessionListProps {
+    sessions: Session[];
+    activeSessionId: string | null;
+    onSelectSession: (id: string) => void;
+    onDeleteSession: (id: string) => void;
 }
 
-export const ConversationList: React.FC<ConversationListProps> = ({
-    conversations,
-    activeConversationId,
-    onSelectConversation,
-    onDeleteConversation,
+export const ConversationList: React.FC<SessionListProps> = ({
+    sessions,
+    activeSessionId,
+    onSelectSession,
+    onDeleteSession,
 }) => {
     const formatDate = (date: Date) => {
         const now = new Date();
@@ -29,15 +29,15 @@ export const ConversationList: React.FC<ConversationListProps> = ({
 
     return (
         <div className="space-y-2">
-            {conversations.map(conversation => (
+            {sessions.map(Session => (
                 <div
-                    key={conversation.id}
+                    key={Session.id}
                     className={`group relative p-3 rounded-lg cursor-pointer transition-all duration-200 ${
-                        activeConversationId === conversation.id
+                        activeSessionId === Session.id
                             ? "bg-blue-50 border border-blue-200/50"
                             : "hover:bg-[#ebebeb] border border-transparent"
                     }`}
-                    onClick={() => onSelectConversation(conversation.id)}
+                    onClick={() => onSelectSession(Session.id)}
                 >
                     <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
@@ -47,17 +47,17 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                                     strokeWidth={1.5}
                                 />
                                 <h3 className="text-sm font-medium text-gray-800 truncate">
-                                    {conversation.title}
+                                    {Session.title}
                                 </h3>
                             </div>
                             <p className="text-xs text-gray-500 font-light">
-                                {formatDate(conversation.updatedAt)}
+                                {formatDate(Session.updatedAt)}
                             </p>
                         </div>
                         <button
                             onClick={e => {
                                 e.stopPropagation();
-                                onDeleteConversation(conversation.id);
+                                onDeleteSession(Session.id);
                             }}
                             className="opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-red-50 transition-all duration-200"
                         >

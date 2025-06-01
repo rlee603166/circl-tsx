@@ -3,7 +3,7 @@ import { ArrowUp } from "lucide-react";
 import styles from "./MessageInput.module.css";
 
 interface MessageInputProps {
-    onSendMessage: (message: string) => void;
+    onSendMessage: (message: string) => (void | Promise<void>);
     disabled?: boolean;
 }
 
@@ -45,15 +45,15 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
     };
 
     return (
-        <div className="bg-white backdrop-blur-xl px-4 py-3">
+        <div className="bg-white backdrop-blur-xl px-4 py-3 w-full">
             <form
                 onSubmit={handleSubmit}
                 className="
-          flex flex-col w-full
-          bg-white dark:bg-gray-700
-          rounded-3xl px-4 py-2
-          gap-y-2 shadow-md
-        "
+                    flex flex-col w-full
+                    bg-white dark:bg-gray-700
+                    rounded-3xl px-6 py-3
+                    gap-y-2 shadow-md
+                "
             >
                 <textarea
                     ref={textareaRef}
@@ -64,10 +64,10 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                     disabled={disabled}
                     rows={1}
                     className={`
-            w-full bg-transparent resize-none outline-none
-            px-2 py-1 text-gray-800 placeholder-gray-500
-            dark:placeholder-gray-400 ${styles.textarea}
-          `}
+                        w-full bg-transparent resize-none outline-none
+                        px-2 py-1 text-gray-800 placeholder-gray-500
+                        dark:placeholder-gray-400 ${styles.textarea}
+                    `}
                     style={{ lineHeight: "1.4" }}
                 />
 
@@ -77,13 +77,13 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                             type="button"
                             onClick={() => setDeep(p => !p)}
                             className={`
-                px-4 py-1 rounded-full text-sm transition-colors
-                ${
-                    deep
-                        ? "bg-blue-50 border border-blue-200/50"
-                        : "bg-gray-100 text-black hover:bg-blue-50"
-                }
-              `}
+                                px-4 py-1 rounded-full text-sm transition-colors
+                                ${
+                                    deep
+                                        ? "bg-blue-50 border border-blue-200/50"
+                                        : "bg-gray-100 text-black hover:bg-blue-50"
+                                }
+                            `}
                         >
                             Deep Search
                         </button>
@@ -91,13 +91,13 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                             type="button"
                             onClick={() => setNetwork(p => !p)}
                             className={`
-                px-4 py-1 rounded-full text-sm transition-colors
-                ${
-                    network
-                        ? "bg-blue-50 border border-blue-200/50"
-                        : "bg-gray-100 text-black hover:bg-blue-50"
-                }
-              `}
+                                px-4 py-1 rounded-full text-sm transition-colors
+                                ${
+                                    network
+                                        ? "bg-blue-50 border border-blue-200/50"
+                                        : "bg-gray-100 text-black hover:bg-blue-50"
+                                }
+                            `}
                         >
                             Network Search
                         </button>

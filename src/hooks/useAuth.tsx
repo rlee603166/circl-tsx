@@ -2,42 +2,52 @@
 
 import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
-
 import { ENDPOINTS } from "@/api.config.js";
+import { Session } from "next-auth";
+import { User } from "@/types";
 
-export const useAuth = () => {
+interface UseAuthReturn {
+    loading: boolean;
+    hasJWT: boolean;
+    user: User | null;
+    session: any;
+    isAuthenticated: boolean;
+    logout: () => void;
+}
+
+interface ExtendedSession extends Session {
+    idToken: string;
+}
+
+export const useAuth = (): UseAuthReturn => {
     const { data: session, status } = useSession();
-    const [loading, setLoading] = useState(true);
-    const [hasJWT, setHasJWT] = useState(false);
-    const [user, setUser] = useState(null);
+    const typedSession = session as ExtendedSession;
+    const [loading, setLoading] = useState<boolean>(true);
+    const [hasJWT, setHasJWT] = useState<boolean>(false);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const fetchJWT = async () => {
             try {
                 if (
                     status === "authenticated" &&
-                    session?.idToken &&
+                    typedSession?.idToken &&
                     !localStorage.getItem("accessToken")
                 ) {
-                    console.log(JSON.stringify(session, null, 2));
                     const response = await fetch(`${ENDPOINTS.auth}/google/log-in`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ token: session.idToken }),
+                        body: JSON.stringify({ token: typedSession.idToken }),
                     });
 
-                    if (!response.ok) {
-                        throw new Error("Authentication failed");
-                    }
+                    if (!response.ok) throw new Error("Authentication failed");
 
                     const { accessToken, refreshToken, user: userData } = await response.json();
-
                     localStorage.setItem("accessToken", accessToken);
                     localStorage.setItem("refreshToken", refreshToken);
 
-                    console.log(JSON.stringify(userData, null, 2));
                     setHasJWT(true);
                     setUser(userData);
                 } else if (localStorage.getItem("accessToken")) {
@@ -78,12 +88,11 @@ export const useAuth = () => {
     }, [session, status]);
 
     const logout = () => {
-        console.log("logging out")
+        console.log("logging out");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         setHasJWT(false);
         setUser(null);
-
         signOut({ callbackUrl: "/" });
     };
 
