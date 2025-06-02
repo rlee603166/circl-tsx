@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getProviders, signIn } from "next-auth/react";
+import { ClientSafeProvider, getProviders, LiteralUnion, signIn } from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers/index";
 
 export default function UnifiedAuth({ initialMode = "login" }) {
     const router = useRouter();
     const [email, setEmail] = useState("");
-    const [providers, setProviders] = useState(null);
+    const [providers, setProviders] = useState<Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null>(null);
     const [isLogin, setIsLogin] = useState(initialMode === "login");
 
     useEffect(() => {
@@ -31,7 +32,7 @@ export default function UnifiedAuth({ initialMode = "login" }) {
 
             {/* Main Content */}
             <div className="flex-1 flex items-center justify-center px-5 py-10">
-                <div className="w-xs max-w-sm">
+                <div className="w-full sm:w-[440px] max-w-xs">
                     {/* Welcome Title with smooth transition */}
                     <div className="h-8 mb-8 flex items-center justify-center">
                         <h2 className="text-2xl font-normal text-center text-gray-900 transition-all duration-300 ease-in-out">
@@ -55,7 +56,7 @@ export default function UnifiedAuth({ initialMode = "login" }) {
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                                 className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
-                                style={{ "--tw-ring-color": "#21B8CD" }}
+                                style={{ ["--tw-ring-color" as string]: "#21B8CD" }}
                                 onFocus={e => (e.target.style.boxShadow = "0 0 0 2px #21B8CD")}
                                 onBlur={e => (e.target.style.boxShadow = "none")}
                                 placeholder=""
@@ -66,8 +67,8 @@ export default function UnifiedAuth({ initialMode = "login" }) {
                             onClick={handleEmailSubmit}
                             className="cursor-pointer w-full text-white font-medium py-3 px-4 rounded-md transition-colors duration-200"
                             style={{ backgroundColor: "#21B8CD" }}
-                            onMouseEnter={e => (e.target.style.backgroundColor = "#1a9bb0")}
-                            onMouseLeave={e => (e.target.style.backgroundColor = "#21B8CD")}
+                            onMouseEnter={e => ((e.target as HTMLElement).style.backgroundColor = "#1a9bb0")}
+                            onMouseLeave={e => ((e.target as HTMLElement).style.backgroundColor = "#21B8CD")}
                         >
                             Continue
                         </button>
@@ -78,7 +79,8 @@ export default function UnifiedAuth({ initialMode = "login" }) {
                         <p className="text-sm text-gray-600 transition-all duration-300 ease-in-out">
                             {isLogin ? "Don't have an account? " : "Already have an account? "}
                             <a 
-                                onClick={toggleMode} 
+                                onClick={toggleMode}
+                                onMouseDown={(e) => e.preventDefault()} 
                                 className="hover:underline cursor-pointer transition-all duration-300 ease-in-out" 
                                 style={{ color: "#21B8CD" }}
                             >

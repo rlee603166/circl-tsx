@@ -75,7 +75,7 @@ export default function WelcomeScreen() {
                 <div className="welcome-container max-w-[750px] w-full px-4">
                     {isAuthenticated ? (
                         <>
-                            <div className="welcome-text">
+                            <div className="welcome-text fade-in-up">
                                 <h1 className="welcome-heading">
                                     {getGreeting()}
                                 </h1>
