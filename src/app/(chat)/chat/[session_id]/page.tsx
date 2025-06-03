@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useChat } from "@/hooks/useChat";
-import { User } from "@/types";
+import { ChatWindow } from "@/components/chat/ChatWindow";
+import { MessageInput } from "@/components/chat/MessageInput";
+import { User, SingleMessage } from "@/types";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import Interface from "@/components/chat/Inteface";
 
 const Index = () => {
     const params = useParams();
@@ -15,22 +16,19 @@ const Index = () => {
     const { loading, isAuthenticated } = useAuth();
 
     const [usersFound, setUsersFound] = useState<User[]>([]);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isManuallySelecting, setIsManuallySelecting] = useState(false);
 
     const {
         sessions,
         activeSession,
-        searchResult,
         isLoading,
         messages,
         addToSessionList,
         activeSessionId,
-        createNewSession,
         sendMessage,
         selectSession,
-        deleteSession,
-        loadSessionMessages,
-        createSessionTab
+        createSessionTab,
+        loadSessions
     } = useChat();
 
     const boot = useCallback(async () => {
@@ -54,43 +52,46 @@ const Index = () => {
     }, [session_id, addToSessionList, createSessionTab, router]);
 
     useEffect(() => {
-        if (!loading && session_id && session_id !== activeSessionId) {
-            const storedQuery = localStorage.getItem("userQuery");
-            
-            if (storedQuery) {
-                boot();
-            } else {
-                selectSession(session_id);
-            }
+        loadSessions();
+    }, [loadSessions]);
+
+    useEffect(() => {
+        console.log("useEffect triggered", { loading, session_id, activeSessionId, hasStoredQuery: !!localStorage.getItem("userQuery"), isManuallySelecting });
+        if (!loading && session_id && session_id !== activeSessionId && !isManuallySelecting) {
+            console.log("Running boot for stored query");
+            boot();
         }
-    }, [session_id, loading, activeSessionId, selectSession, boot]);
+    }, [session_id, loading, activeSessionId, selectSession, boot, sessions, isManuallySelecting]);
+
+    useEffect(() => {
+        setIsManuallySelecting(false);
+    }, [session_id]);
 
     const handleSendMessage = async (message: string) => {
         await sendMessage(message, setUsersFound);
     };
 
-    const handleNewSession = () => {
-        createNewSession();
-        setIsSidebarOpen(false);
-    };
+    // Convert DraftMessage[] to SingleMessage[] for ChatWindow
+    const convertedMessages: SingleMessage[] = messages.map(msg => ({
+        messageID: msg.messageID || null,
+        sessionID: msg.sessionID || null,
+        role: msg.role,
+        content: msg.content,
+        createdAt: msg.createdAt || null,
+    }));
 
     return (
-        <div>
-            <Interface
-                modeType={"chat"}
-                handleNewSession={handleNewSession}
-                handleSendMessage={handleSendMessage}
-                showArtifactPanel={usersFound.length > 0}
-                sessions={sessions}
-                activeSession={activeSession}
-                searchResult={searchResult}
-                isLoading={isLoading}
-                messages={messages}
-                selectSession={selectSession}
-                deleteSession={deleteSession}
+        <>
+            {/* Chat Window */}
+            <ChatWindow messages={convertedMessages} />
+
+            {/* Message Input */}
+            <MessageInput
+                onSendMessage={handleSendMessage}
+                disabled={isLoading}
             />
-        </div>
+        </>
     );
 };
 
-export default Index;
+export default Index; 

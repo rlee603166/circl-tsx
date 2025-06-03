@@ -195,8 +195,11 @@ export const useChat = () => {
     // ─── When the user clicks on a session tab
     const selectSession = useCallback(
         async (id: string) => {
+            console.log("selectSession", id);
             setActiveSessionId(id);
             setSearchResult(null);
+            // Don't navigate here - let the page handle URL navigation
+            // router.push(`/chat/${id}`);
             await loadSessionMessages(id);
         },
         [loadSessionMessages]

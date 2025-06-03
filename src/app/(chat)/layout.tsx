@@ -1,63 +1,54 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChatWindow } from "@/components/chat/ChatWindow";
-import { MessageInput } from "@/components/chat/MessageInput";
+import { useChat } from "@/hooks/useChat";
 import { ChatSidebar } from "@/components/sidebar/ChatSidebar";
-import { ArtifactPanel } from "@/components/artifacts/ArtifactPanel";
 import { ResizableLayout } from "@/components/layout/ResizableLayout";
-import WelcomeScreen from "./WelcomeScreen";
+import { ArtifactPanel } from "@/components/artifacts/ArtifactPanel";
 import { Menu } from "lucide-react";
-import { Session, SearchResult, DraftMessage, SingleMessage } from "@/types";
+import { User } from "@/types";
 import { useRouter } from "next/navigation";
 
-const Interface = ({ 
-    modeType = "welcome", 
-    handleNewSession,
-    handleSendMessage,
-    showArtifactPanel,
-    sessions,
-    activeSession,
-    searchResult,
-    isLoading,
-    messages,
-    selectSession,
-    deleteSession
+export default function ChatLayout({
+    children,
 }: {
-    modeType?: string;
-    handleNewSession: () => void;
-    handleSendMessage: (message: string) => void;
-    showArtifactPanel: boolean;
-    sessions: Session[];
-    activeSession: Session | null;
-    searchResult: SearchResult | null;
-    isLoading: boolean;
-    messages: DraftMessage[];
-    selectSession: (id: string) => void;
-    deleteSession: (id: string) => void;
-}) => {
+    children: React.ReactNode;
+}) {
     const router = useRouter();
+    const [usersFound, setUsersFound] = useState<User[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
+    const {
+        sessions,
+        activeSession,
+        searchResult,
+        isLoading,
+        messages,
+        createNewSession,
+        sendMessage,
+        selectSession,
+        deleteSession,
+        loadSessions,
+    } = useChat();
+
     useEffect(() => {
         setIsLoaded(true);
-    }, []);
+        loadSessions();
+    }, [loadSessions]);
 
-    // Convert DraftMessage[] to SingleMessage[] for ChatWindow
-    const convertedMessages: SingleMessage[] = messages.map(msg => ({
-        messageID: msg.messageID || null,
-        sessionID: msg.sessionID || null,
-        role: msg.role,
-        content: msg.content,
-        createdAt: msg.createdAt || null,
-    }));
+    const handleNewSession = () => {
+        createNewSession();
+        setIsSidebarOpen(false);
+    };
 
     const onSelectSession = (id: string) => {
         selectSession(id);
         router.push(`/chat/${id}`);
     };
+
+    const showArtifactPanel = !!searchResult && searchResult.professionals.length > 0;
 
     return (
         <div
@@ -98,18 +89,8 @@ const Interface = ({
                                     </button>
                                 </div>
 
-                                {/* Chat Window */}
-                                {modeType === "chat" ? (
-                                    <ChatWindow messages={convertedMessages} />
-                                ) : (
-                                    <WelcomeScreen />
-                                )}
-
-                                {/* Message Input */}
-                                {modeType === "chat" && <MessageInput
-                                    onSendMessage={handleSendMessage}
-                                    disabled={isLoading}
-                                />}
+                                {/* Content area - this will change between pages */}
+                                {children}
                             </div>
                         </div>
                     }
@@ -139,6 +120,4 @@ const Interface = ({
             </div>
         </div>
     );
-};
-
-export default Interface;
+} 
