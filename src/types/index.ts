@@ -1,15 +1,19 @@
 
-export interface CreateMessage {
-    role:       string;
-    content:    string;
-}
+export interface DraftMessage {
+    messageID?: string;
+    sessionID?: string;
+    role: string;
+    content: string;
+    createdAt: Date;
+  }
+  
 
 export interface SingleMessage {
     messageID:  string | null;
     sessionID:  string | null;
     role:       string;
     content:    string;
-    createdAt:  Date;
+    createdAt:  Date | null;
 }
 
 export interface User {
@@ -23,9 +27,8 @@ export interface User {
 
 export interface Session {
     sessionID:  string | null;
-    userID:     string;
-    title:      string;
-    messages:   [];
+    userID:     string | null;
+    title:      string | null;
     createdAt:  Date;
 }
 

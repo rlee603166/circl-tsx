@@ -16,14 +16,17 @@ const Index = () => {
         activeSession,
         searchResult,
         isLoading,
+        messages,
         createNewSession,
         sendMessage,
         selectSession,
         deleteSession,
+        loadSessions,
     } = useChat();
 
     useEffect(() => {
         setIsLoaded(true);
+        loadSessions();
         // Create initial Sessions if none exists
         if (sessions.length === 0) {
             createNewSession();
@@ -53,7 +56,14 @@ const Index = () => {
                 modeType={"welcome"} 
                 handleNewSession={handleNewSessions} 
                 handleSendMessage={handleSendMessage} 
-                showArtifactPanel={showArtifactPanel} 
+                showArtifactPanel={showArtifactPanel}
+                sessions={sessions}
+                activeSession={activeSession}
+                searchResult={searchResult}
+                isLoading={isLoading}
+                messages={messages}
+                selectSession={selectSession}
+                deleteSession={deleteSession}
             />
         </div>
     );

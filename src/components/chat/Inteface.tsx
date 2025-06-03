@@ -7,19 +7,33 @@ import { ChatSidebar } from "@/components/sidebar/ChatSidebar";
 import { ArtifactPanel } from "@/components/artifacts/ArtifactPanel";
 import { ResizableLayout } from "@/components/layout/ResizableLayout";
 import WelcomeScreen from "./WelcomeScreen";
-import { useChat } from "@/hooks/useChat";
 import { Menu } from "lucide-react";
+import { Session, SearchResult, DraftMessage, SingleMessage } from "@/types";
 
 const Interface = ({ 
     modeType = "welcome", 
     handleNewSession,
     handleSendMessage,
-    showArtifactPanel 
+    showArtifactPanel,
+    sessions,
+    activeSession,
+    searchResult,
+    isLoading,
+    messages,
+    selectSession,
+    deleteSession
 }: {
     modeType?: string;
     handleNewSession: () => void;
     handleSendMessage: (message: string) => void;
     showArtifactPanel: boolean;
+    sessions: Session[];
+    activeSession: Session | null;
+    searchResult: SearchResult | null;
+    isLoading: boolean;
+    messages: DraftMessage[];
+    selectSession: (id: string) => void;
+    deleteSession: (id: string) => void;
 }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -29,17 +43,14 @@ const Interface = ({
         setIsLoaded(true);
     }, []);
 
-    const {
-        sessions,
-        activeSession,
-        searchResult,
-        isLoading,
-        createNewSession,
-        sendMessage,
-        selectSession,
-        deleteSession,
-    } = useChat();
-
+    // Convert DraftMessage[] to SingleMessage[] for ChatWindow
+    const convertedMessages: SingleMessage[] = messages.map(msg => ({
+        messageID: msg.messageID || null,
+        sessionID: msg.sessionID || null,
+        role: msg.role,
+        content: msg.content,
+        createdAt: msg.createdAt || null,
+    }));
 
     return (
         <div
@@ -82,7 +93,7 @@ const Interface = ({
 
                                 {/* Chat Window */}
                                 {modeType === "chat" ? (
-                                    <ChatWindow messages={activeSession?.messages || []} />
+                                    <ChatWindow messages={convertedMessages} />
                                 ) : (
                                     <WelcomeScreen />
                                 )}

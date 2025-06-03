@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Mic, ArrowUp, Sparkles, BrainCircuit, Lock } from "lucide-react";
@@ -40,6 +40,7 @@ export default function WelcomeScreen() {
     const [inputValue, setInputValue] = useState("");
     const router = useRouter();
     const { loading, isAuthenticated, user } = useAuth();
+    const { addToSessionList, loadSessions } = useChat();
 
     const handleSubmit = async (message: string) => {
         if (!message.trim()) return;
@@ -53,7 +54,6 @@ export default function WelcomeScreen() {
         try {
             localStorage.setItem("userQuery", message.trim());
             const session_id = await searchService.createSession(user?.userID);
-
             router.push(`/chat/${session_id}`);
         } catch (err) {
             console.error("Error creating session:", err);

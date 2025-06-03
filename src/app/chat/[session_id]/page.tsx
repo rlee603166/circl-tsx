@@ -1,16 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { ChatWindow } from "@/components/chat/ChatWindow";
-import { MessageInput } from "@/components/chat/MessageInput";
-import { ChatSidebar } from "@/components/sidebar/ChatSidebar";
-import { ArtifactPanel } from "@/components/artifacts/ArtifactPanel";
-import { ResizableLayout } from "@/components/layout/ResizableLayout";
+
+import React, { useState, useEffect, useCallback } from "react";
 import { useChat } from "@/hooks/useChat";
-import { Menu } from "lucide-react";
 import { User } from "@/types";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { searchService } from "@/services/searchService";
 import { useAuth } from "@/hooks/useAuth";
 import Interface from "@/components/chat/Inteface";
 
@@ -24,35 +18,52 @@ const Index = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const {
+        sessions,
+        activeSession,
+        searchResult,
+        isLoading,
+        messages,
+        addToSessionList,
         activeSessionId,
         createNewSession,
         sendMessage,
         selectSession,
-        loadSessionMessages
+        deleteSession,
+        loadSessionMessages,
+        createSessionTab
     } = useChat();
 
-    useEffect(() => {
-        const boot = async () => {
-            try {
-                const storedQuery = localStorage.getItem("userQuery");
+    const boot = useCallback(async () => {
+        try {
+            const storedQuery = localStorage.getItem("userQuery");
 
-                if (storedQuery) {
-                    localStorage.removeItem("userQuery");
-                    await sendMessage(storedQuery, setUsersFound);
-                } else {
-                    await loadSessionMessages(session_id);
-                }
-            } catch (error) {
-                console.error("Error in boot:", error);
-                router.push("/");
+            if (storedQuery) {
+                addToSessionList({
+                    sessionID: session_id,
+                    title: "",
+                    createdAt: new Date(),
+                    userID: null,
+                });
+                localStorage.removeItem("userQuery");
+                await createSessionTab(session_id, storedQuery);
             }
-        };
-
-        if (!loading && session_id && session_id !== activeSessionId) {
-            selectSession(session_id);
-            boot();
+        } catch (error) {
+            console.error("Error in boot:", error);
+            router.push("/");
         }
-    }, [session_id, loading, activeSessionId, selectSession, loadSessionMessages, sendMessage, router]);
+    }, [session_id, addToSessionList, createSessionTab, router]);
+
+    useEffect(() => {
+        if (!loading && session_id && session_id !== activeSessionId) {
+            const storedQuery = localStorage.getItem("userQuery");
+            
+            if (storedQuery) {
+                boot();
+            } else {
+                selectSession(session_id);
+            }
+        }
+    }, [session_id, loading, activeSessionId, selectSession, boot]);
 
     const handleSendMessage = async (message: string) => {
         await sendMessage(message, setUsersFound);
@@ -65,11 +76,18 @@ const Index = () => {
 
     return (
         <div>
-            <Interface 
-                modeType={"chat"} 
-                handleNewSession={handleNewSession} 
-                handleSendMessage={handleSendMessage} 
-                showArtifactPanel={usersFound.length > 0} 
+            <Interface
+                modeType={"chat"}
+                handleNewSession={handleNewSession}
+                handleSendMessage={handleSendMessage}
+                showArtifactPanel={usersFound.length > 0}
+                sessions={sessions}
+                activeSession={activeSession}
+                searchResult={searchResult}
+                isLoading={isLoading}
+                messages={messages}
+                selectSession={selectSession}
+                deleteSession={deleteSession}
             />
         </div>
     );

@@ -29,9 +29,9 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
     const [searchTerm, setSearchTerm] = useState("");
 
     const filteredsessions = sessions.filter(Session =>
-        Session.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
+        Session.title?.toLowerCase().includes(searchTerm.toLowerCase()) || false
+    );    
+    
     return (
         <>
             {isOpen && (

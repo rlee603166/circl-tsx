@@ -2,7 +2,85 @@ import { ENDPOINTS } from "@/api.config.js";
 import { authService } from "./AuthService";
 
 export const searchService = {
-    createSession: async (user_id) => {
+    summarize: async (query, session_id, callbacks) => {
+        if (!authService.isAuthenticated()) {
+            throw new Error("Authentication required to access api");
+        }
+
+        const { onSummary, onStatus } = callbacks || {}; 
+
+        try {
+            const response = await authService.authenticatedFetch(
+                `${ENDPOINTS.astralis}/summarize`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query, session_id }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = "";
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    onStatus?.("Completed");
+                    break;
+                }
+
+                const chunk = decoder.decode(value, { stream: true });
+                buffer += chunk;
+                const lines = buffer.split("\n");
+                buffer = lines.pop();
+
+                for (const line of lines) {
+                    if (line.trim() && line.startsWith("data:")) {
+                        try {
+                            const jsonString = line.slice(5).trim();
+                            if (!jsonString) continue;
+
+                            const data = JSON.parse(jsonString);
+
+                            switch (data.type) {
+                                case "summary":
+                                    onSummary?.(data.message);
+                                    break;
+                                case "error":
+                                    console.error("Server error:", data.message);
+                                    onStatus?.(`Error: ${data.message}`);
+                                    throw new Error(data.message);
+                            }
+                        } catch (parseError) {
+                            console.error("Error parsing line:", line, parseError);
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error("Search error:", error);
+
+            if (error.message.includes("Authentication")) {
+                onStatus?.("Authentication error. Please log in again.");
+                setTimeout(() => {
+                    window.location.href = "/log-in";
+                }, 2000);
+            } else if (error.message.includes("Network")) {
+                onStatus?.("Network error. Please check your connection.");
+            } else {
+                onStatus?.(`Error: ${error.message || "Failed to get response"}`);
+            }
+
+            throw error;
+        }
+    },
+
+    createSession: async user_id => {
         if (!authService.isAuthenticated()) {
             throw new Error("Authentication required to create session");
         }
@@ -168,7 +246,7 @@ export const searchService = {
         }
 
         try {
-            const response = await authService.authenticatedFetch(`${ENDPOINTS.search}/sessions`, {
+            const response = await authService.authenticatedFetch(`${ENDPOINTS.session}`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
             });
@@ -180,7 +258,7 @@ export const searchService = {
             }
 
             const data = await response.json();
-            return data.sessions || [];
+            return data;
         } catch (error) {
             console.error("Error getting user sessions:", error);
             throw error;
@@ -194,7 +272,7 @@ export const searchService = {
 
         try {
             const response = await authService.authenticatedFetch(
-                `${ENDPOINTS.search}/sessions/${sessionId}`,
+                `${ENDPOINTS.session}/${sessionId}`,
                 {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
