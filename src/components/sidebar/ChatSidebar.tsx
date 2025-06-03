@@ -30,8 +30,8 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
     const filteredsessions = sessions.filter(Session =>
         Session.title?.toLowerCase().includes(searchTerm.toLowerCase()) || false
-    );    
-    
+    ); 
+
     return (
         <>
             {isOpen && (
@@ -63,7 +63,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                         </div>
 
                         <div className="flex-col">
-                            {/* “New Chat” button */}
+                            {/* "New Chat" button */}
                             <div className="relative cursor-pointer" onClick={onNewSession}>
                                 <SquarePlus
                                     className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-600"

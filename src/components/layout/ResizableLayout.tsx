@@ -9,8 +9,9 @@ interface ResizableLayoutProps {
     chatWindow: React.ReactNode;
     artifactPanel: React.ReactNode;
     showArtifactPanel: boolean;
-    isCollapsed: boolean;
+    isCollapsed: boolean;   
     setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+    createNewSession: () => void;
 }
 
 export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
@@ -19,7 +20,8 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
     artifactPanel,
     showArtifactPanel,
     isCollapsed,
-    setIsCollapsed
+    setIsCollapsed,
+    createNewSession
 }) => {
     return (
         <div className="flex h-screen w-full">
@@ -35,6 +37,7 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
                     <Header 
                         isCollapsed={isCollapsed}
                         setIsCollapsed={setIsCollapsed}
+                        createNewSession={createNewSession}
                     />
                 </div>
 

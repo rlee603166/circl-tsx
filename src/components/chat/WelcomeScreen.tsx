@@ -10,7 +10,7 @@ import "./styles/ChatInterface.css";
 import { searchService } from "@/services/searchService";
 import { useAuth } from "@/hooks/useAuth";
 import { MessageInput } from "./MessageInput";
-import { useChat } from "@/hooks/useChat";
+import { useChatContext } from "@/contexts/ChatContext";
 
 const AuthRequiredMessage = () => (
     <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
@@ -40,7 +40,7 @@ export default function WelcomeScreen() {
     const [inputValue, setInputValue] = useState("");
     const router = useRouter();
     const { loading, isAuthenticated, user } = useAuth();
-    const { addToSessionList, loadSessions } = useChat();
+    const { addToSessionList, loadSessions } = useChatContext();
 
     const handleSubmit = async (message: string) => {
         if (!message.trim()) return;
@@ -53,8 +53,8 @@ export default function WelcomeScreen() {
 
         try {
             localStorage.setItem("userQuery", message.trim());
-            const session_id = await searchService.createSession(user?.userID);
-            router.push(`/chat/${session_id}`);
+            const tempSessionId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            router.push(`/chat/${tempSessionId}`);
         } catch (err) {
             console.error("Error creating session:", err);
         }
@@ -73,7 +73,9 @@ export default function WelcomeScreen() {
         <div className="chat-container">
             <main className="chat-main">
                 <div className="welcome-container max-w-[750px] w-full px-4">
-                    {isAuthenticated ? (
+                    {!isAuthenticated ? (
+                        <AuthRequiredMessage />
+                    ) : (
                         <>
                             <div className="welcome-text fade-in-up">
                                 <h1 className="welcome-heading">
@@ -83,8 +85,6 @@ export default function WelcomeScreen() {
                             </div>
                            <MessageInput onSendMessage={handleSubmit} />
                         </>
-                    ) : (
-                        <AuthRequiredMessage />
                     )}
                 </div>
             </main>

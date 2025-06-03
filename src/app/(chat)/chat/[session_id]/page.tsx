@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useChat } from "@/hooks/useChat";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import { MessageInput } from "@/components/chat/MessageInput";
 import { User, SingleMessage } from "@/types";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { useChatContext } from "@/contexts/ChatContext";
 
 const Index = () => {
     const params = useParams();
@@ -28,22 +28,22 @@ const Index = () => {
         sendMessage,
         selectSession,
         createSessionTab,
-        loadSessions
-    } = useChat();
+        loadSessions,
+    } = useChatContext();
 
     const boot = useCallback(async () => {
         try {
             const storedQuery = localStorage.getItem("userQuery");
 
             if (storedQuery) {
-                addToSessionList({
-                    sessionID: session_id,
-                    title: "",
-                    createdAt: new Date(),
-                    userID: null,
-                });
+
                 localStorage.removeItem("userQuery");
-                await createSessionTab(session_id, storedQuery);
+                await Promise.all([
+                    createSessionTab(session_id, storedQuery),
+                    sendMessage(storedQuery, setUsersFound)
+                ]);
+            } else {
+                selectSession(session_id);
             }
         } catch (error) {
             console.error("Error in boot:", error);
@@ -56,12 +56,10 @@ const Index = () => {
     }, [loadSessions]);
 
     useEffect(() => {
-        console.log("useEffect triggered", { loading, session_id, activeSessionId, hasStoredQuery: !!localStorage.getItem("userQuery"), isManuallySelecting });
-        if (!loading && session_id && session_id !== activeSessionId && !isManuallySelecting) {
-            console.log("Running boot for stored query");
+        if (!loading && session_id && session_id !== activeSessionId) {
             boot();
-        }
-    }, [session_id, loading, activeSessionId, selectSession, boot, sessions, isManuallySelecting]);
+        }     
+    }, [session_id, loading]);
 
     useEffect(() => {
         setIsManuallySelecting(false);

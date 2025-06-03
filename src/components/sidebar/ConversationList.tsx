@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Session } from "@/types";
 import { Trash2, MessageSquare } from "lucide-react";
 
@@ -8,6 +8,45 @@ interface SessionListProps {
     onSelectSession: (id: string) => void;
     onDeleteSession: (id: string) => void;
 }
+
+// Typing animation component
+const TypingText: React.FC<{ text: string; isNewSession: boolean }> = ({ text, isNewSession }) => {
+    const [displayedText, setDisplayedText] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+
+    useEffect(() => {
+        if (isNewSession) {
+            setDisplayedText("Generating title...");
+            return;
+        }
+
+        if (text && text !== displayedText && !isNewSession) {
+            setIsTyping(true);
+            setDisplayedText("");
+
+            let currentIndex = 0;
+            const interval = setInterval(() => {
+                if (currentIndex <= text.length) {
+                    setDisplayedText(text.slice(0, currentIndex));
+                    currentIndex++;
+                } else {
+                    setIsTyping(false);
+                    clearInterval(interval);
+                }
+            }, 30); // Type at 30ms per character
+
+            return () => clearInterval(interval);
+        } else if (!isNewSession) {
+            setDisplayedText(text);
+        }
+    }, [text, isNewSession]);
+
+    return (
+        <span className={`${isNewSession ? "text-gray-500 italic" : ""} ${isTyping ? "typing-cursor" : ""}`}>
+            {displayedText}
+        </span>
+    );
+};
 
 export const ConversationList: React.FC<SessionListProps> = ({
     sessions,
@@ -30,19 +69,15 @@ export const ConversationList: React.FC<SessionListProps> = ({
     return (
         <div className="space-y-2">
             <style jsx>{`
-                .typing-animation {
-                    overflow: hidden;
-                    white-space: nowrap;
-                    animation: typing 1.2s steps(30, end), blink-caret 0.75s step-end infinite;
-                    border-right: 2px solid transparent;
-                    position: relative;
-                    display: inline-block;
-                    vertical-align: top;
+                .typing-cursor::after {
+                    content: '|';
+                    animation: blink 1s infinite;
+                    color: #3b82f6;
                 }
                 
-                .typing-animation.active {
-                    border-right-color: #3b82f6;
-                    animation: typing 1s steps(30, end), blink-caret 0.75s step-end infinite;
+                @keyframes blink {
+                    0%, 50% { opacity: 1; }
+                    51%, 100% { opacity: 0; }
                 }
                 
                 .typing-container {
@@ -83,73 +118,36 @@ export const ConversationList: React.FC<SessionListProps> = ({
                     width: 50px;
                     right: 0;
                 }
-                
-                @keyframes typing {
-                    from {
-                        width: 0;
-                    }
-                    to {
-                        width: 100%;
-                    }
-                }
-                
-                @keyframes blink-caret {
-                    from, to {
-                        border-color: transparent;
-                    }
-                    50% {
-                        border-color: #3b82f6;
-                    }
-                }
-                
-                .typing-complete {
-                    border-right: none;
-                }
             `}</style>
             {sessions.map(Session => {
                 const isNewSession = Session.title === "";
-                const titleText = isNewSession ? "New Conversation" : (Session.title || "");
+                const titleText = Session.title || "";
                 const needsFade = titleText.length > 20; // Approximate character limit for 180px
 
                 return (
                     <div
                         key={Session.sessionID}
-                        className={`group relative p-3 rounded-lg cursor-pointer transition-all duration-200 ${activeSessionId === Session.sessionID
+                        className={`group relative p-[5px] rounded-lg cursor-pointer transition-all duration-200 ${activeSessionId === Session.sessionID
                             ? "bg-blue-50 border border-blue-200/50 active-session"
                             : "hover:bg-[#ebebeb] border border-transparent"
                             }`}
                         onClick={() => onSelectSession(Session.sessionID || "")}
                     >
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-center justify-between">
                             <div className="flex-1 min-w-0">
-                                <div className="flex items-center space-x-2 mb-1">
+                                <div className="flex items-center space-x-2">
                                     <MessageSquare
                                         className="w-4 h-4 text-gray-400 flex-shrink-0"
                                         strokeWidth={1.5}
                                     />
-                                    <h3 className="text-sm font-medium text-gray-800">
-                                        {isNewSession ? (
-                                            <div className={`typing-container ${needsFade ? 'with-fade' : ''}`}>
-                                                <span
-                                                    className="typing-animation inline-block"
-                                                    style={{
-                                                        animationDelay: '0.1s'
-                                                    }}
-                                                    onAnimationEnd={(e) => {
-                                                        e.currentTarget.classList.add('typing-complete');
-                                                        e.currentTarget.classList.remove('typing-animation');
-                                                    }}
-                                                >
-                                                    {titleText}
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <div className={`typing-container ${needsFade ? 'with-fade' : ''}`}>
-                                                <span className="inline-block">
-                                                    {titleText}
-                                                </span>
-                                            </div>
-                                        )}
+                                    <h3 className="text-sm font-small text-gray-800">
+                                        <div className={`typing-container ${needsFade ? 'with-fade' : ''}`}>
+                                            <TypingText 
+                                                key={Session.sessionID} 
+                                                text={titleText} 
+                                                isNewSession={isNewSession} 
+                                            />
+                                        </div>
                                     </h3>
                                 </div>
                                 {/* <p className="text-xs text-gray-500 font-light">

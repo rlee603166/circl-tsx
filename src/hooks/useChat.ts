@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Session, User, SearchResult, SingleMessage, DraftMessage } from "@/types";
 import { useRouter } from "next/navigation";
 import { searchService } from "@/services/searchService";
+import { useAuth } from "@/hooks/useAuth";
 
 export const useChat = () => {
     const [sessions, setSessions] = useState<Session[]>([]);
@@ -12,12 +13,18 @@ export const useChat = () => {
     const [messages, setMessages] = useState<DraftMessage[]>([]);
 
     const router = useRouter();
+    const { user } = useAuth();
     const activeSession = sessions.find((c) => c.sessionID === activeSessionId) || null;
 
     const generateTempId = () => Math.random().toString(36).substr(2, 9);
 
     const addToSessionList = useCallback((newSession: Session) => {
-        setSessions((prev) => [newSession, ...prev]);
+        setSessions((prev) => {
+            const newSessions = [newSession, ...prev];
+            // Sort sessions by most recent first after adding
+            newSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            return newSessions;
+        });
     }, []);
 
     const createNewSession = useCallback(() => {
@@ -26,57 +33,6 @@ export const useChat = () => {
         setSearchResult(null);
         setMessages([]);
     }, []);
-
-    const createSessionTab = useCallback(
-        async (sessionID: string, query: string) => {
-            setActiveSessionId(sessionID);
-
-            try {
-                let titleBuffer = "";
-                let updateTimer: NodeJS.Timeout | null = null;
-                
-                const batchedTitleUpdate = () => {
-                    if (titleBuffer) {
-                        setSessions((prev) => {
-                            const newSessions = [...prev];
-                            const idx = newSessions.findIndex((c) => c.sessionID === sessionID);
-                            if (idx !== -1) {
-                                newSessions[idx] = {
-                                    ...newSessions[idx],
-                                    title: titleBuffer
-                                };
-                            }
-                            return newSessions;
-                        });
-                    }
-                };
-
-                await searchService.summarize(query, sessionID, {
-                    onSummary: (message: string) => {
-                        titleBuffer += message;
-                        
-                        // Clear existing timer and set a new one
-                        if (updateTimer) {
-                            clearTimeout(updateTimer);
-                        }
-                        
-                        // Batch updates every 50ms to reduce re-renders
-                        updateTimer = setTimeout(batchedTitleUpdate, 50);
-                    },
-                });
-                
-                // Ensure final update happens
-                if (updateTimer) {
-                    clearTimeout(updateTimer);
-                }
-                batchedTitleUpdate();
-                
-            } catch (error) {
-                console.error("Error creating session tab:", error);
-            }
-        },
-        []
-    );
 
     const updateMessages = useCallback(
         (content: string, role: "user" | "assistant") => {
@@ -160,12 +116,18 @@ export const useChat = () => {
 
     const loadSessions = useCallback(async () => {
         const fetchedSessions = await searchService.getUserSessions();
+        if (!fetchedSessions || fetchedSessions.length === 0) return;
+        
         const sessionTypes: Session[] = fetchedSessions.map((session: any) => ({
             sessionID: session.session_id,
             title: session.title,
             createdAt: session.created_at,
             userID: session.user_id,
         }));
+        
+        // Sort sessions by most recent first
+        sessionTypes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
         setSessions([...sessionTypes]);
     }, []);
 
@@ -192,17 +154,49 @@ export const useChat = () => {
         []
     );
 
-    // ─── When the user clicks on a session tab
     const selectSession = useCallback(
         async (id: string) => {
-            console.log("selectSession", id);
             setActiveSessionId(id);
             setSearchResult(null);
-            // Don't navigate here - let the page handle URL navigation
-            // router.push(`/chat/${id}`);
             await loadSessionMessages(id);
         },
         [loadSessionMessages]
+    );
+
+    const createSessionTab = useCallback(
+        async (sessionID: string, query: string) => {
+            try {
+                // First create the backend session to get a real session ID
+                const realSessionId = await searchService.createSession(user?.userID || null);
+                
+                // Add temporary session with empty title for loading state
+                addToSessionList({
+                    sessionID: realSessionId,
+                    title: "", // Empty title triggers typing animation
+                    createdAt: new Date(),
+                    userID: user?.userID || null,
+                });
+                
+                // Update URL to use real session ID and select the session
+                router.replace(`/chat/${realSessionId}`);
+                setTimeout(() => selectSession(realSessionId), 0);
+                
+                // Then get the summary using the real session ID
+                const summary = await searchService.summarize(query, realSessionId);
+                
+                // Update the session with the summary title
+                setSessions((prev) => 
+                    prev.map((session) =>
+                        session.sessionID === realSessionId
+                            ? { ...session, title: summary }
+                            : session
+                    )
+                );
+            } catch (error) {
+                console.error("Error creating session tab:", error);
+            } 
+        },
+        [addToSessionList, router, user?.userID]
     );
 
     // ─── Delete a session entirely

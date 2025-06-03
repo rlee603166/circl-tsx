@@ -3,12 +3,13 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { Search, Download, LogOut, User } from "lucide-react";
+import { Search, Download, LogOut, User as UserIcon, SquarePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { PanelLeftOpen, SquarePlus } from "lucide-react";
+import { PanelLeft } from "lucide-react";
 
 import "./styles/Header.css";
+import { User } from "@/types";
 
 const UnauthenticatedButtons = () => {
     const router = useRouter();
@@ -38,8 +39,8 @@ const UnauthenticatedButtons = () => {
     );
 };
 
-const AuthenticatedButtons = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
-    const getInitials = user => {
+const AuthenticatedButtons = ({ user, onLogout }: { user: User | null; onLogout: () => void }) => {
+    const getInitials = (user: User) => {
         if (user?.firstName && user?.lastName) {
             return `${user.firstName[0]}${user.lastName[0]}`;
         }
@@ -69,8 +70,8 @@ const AuthenticatedButtons = ({ user, onLogout }: { user: any; onLogout: () => v
                 <Download className="icon-small" />
             </Button>
             <div className="flex items-center gap-2">
-                <div className="avatar" title={user?.name || user?.email}>
-                    {getInitials(user)}
+                <div className="avatar" title={user?.firstName + " " + user?.lastName || user?.email}>
+                    {getInitials(user as User)}
                 </div>
                 <Button
                     variant="ghost"
@@ -93,33 +94,43 @@ const LoadingButtons = () => (
     </div>
 );
 
-export default function Header({ isCollapsed, setIsCollapsed }) {
+export default function Header({ 
+    isCollapsed, 
+    setIsCollapsed, 
+    createNewSession 
+}: { 
+    isCollapsed: boolean, 
+    setIsCollapsed: (isCollapsed: boolean) => void,
+    createNewSession: () => void }
+) {
     const router = useRouter();
     const { loading, isAuthenticated, user, logout } = useAuth();
 
     return (
         <header className="chat-header">
-            <div
-                className={`logo-container  ${isCollapsed ? "p-[11px]" : "p-[16px]"}`}
-                onClick={() => router.push("/")}
-            >
+            <div className={`logo-container ${isCollapsed ? "p-[11px]" : "p-[16px]"}`}>
                 {isCollapsed && (
                     <div className="collapsed-buttons">
                         <div
                             className="hover:bg-[#ebebeb] focus:bg-[#ebebeb] cursor-pointer p-[4px] px-[6px] rounded-md"
                             onClick={() => setIsCollapsed(!isCollapsed)}
                         >
-                            <PanelLeftOpen className="w-5 h-6 text-gray-600" strokeWidth={2} />
+                            <PanelLeft className="w-5 h-6 text-gray-600" strokeWidth={2} />
                         </div>
                         <div
                             className="hover:bg-[#ebebeb] focus:bg-[#ebebeb] cursor-pointer p-[4px] px-[6px] rounded-md"
-                            // onClick={() => setIsCollapsed(!isCollapsed)}
+                            onClick={createNewSession}
                         >
                             <SquarePlus className="w-5 h-6 text-gray-600" strokeWidth={2} />
                         </div>
                     </div>
                 )}
-                <div className="app-title">circl.</div>
+                <div 
+                    className="app-title"
+                    onClick={() => router.push("/")}
+                >
+                    circl.
+                </div>
             </div>
             <div className="header-actions">
                 {loading ? (
@@ -128,7 +139,7 @@ export default function Header({ isCollapsed, setIsCollapsed }) {
                     <AuthenticatedButtons user={user} onLogout={logout} />
                 ) : (
                     <div className="auth-buttons">
-                        <UnauthenticatedButtons router={router} />
+                        <UnauthenticatedButtons />
                     </div>
                 )}
             </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useChat } from "@/hooks/useChat";
+import { ChatProvider, useChatContext } from "@/contexts/ChatContext";
 import { ChatSidebar } from "@/components/sidebar/ChatSidebar";
 import { ResizableLayout } from "@/components/layout/ResizableLayout";
 import { ArtifactPanel } from "@/components/artifacts/ArtifactPanel";
@@ -9,11 +9,7 @@ import { Menu } from "lucide-react";
 import { User } from "@/types";
 import { useRouter } from "next/navigation";
 
-export default function ChatLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const router = useRouter();
     const [usersFound, setUsersFound] = useState<User[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -31,7 +27,7 @@ export default function ChatLayout({
         selectSession,
         deleteSession,
         loadSessions,
-    } = useChat();
+    } = useChatContext();
 
     useEffect(() => {
         setIsLoaded(true);
@@ -59,6 +55,7 @@ export default function ChatLayout({
                 <ResizableLayout
                     isCollapsed={isCollapsed}
                     setIsCollapsed={setIsCollapsed}
+                    createNewSession={createNewSession}
                     sidebar={
                         <div className="hidden lg:block h-full">
                             <ChatSidebar
@@ -119,5 +116,17 @@ export default function ChatLayout({
                 </div>
             </div>
         </div>
+    );
+};
+
+export default function ChatLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <ChatProvider>
+            <ChatLayoutContent>{children}</ChatLayoutContent>
+        </ChatProvider>
     );
 } 
