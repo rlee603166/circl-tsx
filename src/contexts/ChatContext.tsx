@@ -12,7 +12,8 @@ interface ChatContextType {
     addToSessionList: (newSession: Session) => void;
     createNewSession: () => void;
     createSessionTab: (sessionID: string, query: string) => Promise<void>;
-    sendMessage: (content: string, setUsersFound: (found: User[]) => void) => Promise<void>;
+    updateMessages: (session_id: string, content: string, role: "user" | "assistant") => void;
+    sendMessage: (session_id: string, content: string, setUsersFound: (found: User[]) => void) => Promise<void>;
     selectSession: (id: string) => Promise<void>;
     deleteSession: (id: string) => void;
     loadSessions: () => Promise<void>;

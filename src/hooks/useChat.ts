@@ -16,7 +16,11 @@ export const useChat = () => {
     const { user } = useAuth();
     const activeSession = sessions.find((c) => c.sessionID === activeSessionId) || null;
 
-    const generateTempId = () => Math.random().toString(36).substr(2, 9);
+    const generateTempId = () => {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substr(2, 9);
+        return `temp-${timestamp}-${random}`;
+    };
 
     const addToSessionList = useCallback((newSession: Session) => {
         setSessions((prev) => {
@@ -35,15 +39,16 @@ export const useChat = () => {
     }, []);
 
     const updateMessages = useCallback(
-        (content: string, role: "user" | "assistant") => {
-            if (!activeSessionId) return;
+        (session_id: string, content: string, role: "user" | "assistant") => {
 
             const newMsg: DraftMessage = {
-                messageID: undefined,
-                sessionID: activeSessionId,
+                messageID: generateTempId(),
+                sessionID: session_id,
                 role,
                 content,
                 createdAt: new Date(),
+                isThinking: false,
+                thinkingText: "",
             };
 
             setMessages((prev) => [...prev, newMsg]);
@@ -52,56 +57,78 @@ export const useChat = () => {
     );
 
     const streamThought = useCallback(
-        (chunk: string) => {
+        (session_id: string, chunk: string, tmp_id: string) => {
             setMessages((prevMsgs) => {
                 const newMsgs = [...prevMsgs];
-                if (newMsgs.length > 0 && newMsgs[newMsgs.length - 1].role === "assistant") {
-                    const last = newMsgs[newMsgs.length - 1];
-                    newMsgs[newMsgs.length - 1] = {
-                        ...last,
-                        content: last.content + chunk,
+                const thoughtId = `${tmp_id}_thought`;
+                console.log('thoughtId: ', thoughtId);
+                const existingIndex = newMsgs.findIndex(msg => msg.messageID === thoughtId);
+                
+                if (existingIndex !== -1) {
+                    const existing = newMsgs[existingIndex];
+                    newMsgs[existingIndex] = {
+                        ...existing,
+                        content: existing.content + chunk,
                     };
                 } else {
                     newMsgs.push({
-                        messageID: undefined,
-                        sessionID: activeSessionId || undefined,
+                        messageID: thoughtId,
+                        sessionID: session_id,
                         role: "assistant",
                         content: chunk,
                         createdAt: new Date(),
+                        isThinking: true,
+                        thinkingText: "",
                     });
                 }
                 return newMsgs;
             });
         },
-        [activeSessionId]
+        []
     );
 
-    const streamResponse = useCallback((chunk: string) => {
-        setMessages((prevMsgs) => {
-            const newMsgs = [...prevMsgs];
-            if (newMsgs.length === 0) return newMsgs;
+    const streamResponse = useCallback(
+        (session_id: string, chunk: string, tmp_id: string) => {
+            setMessages((prevMsgs) => {
+                const newMsgs = [...prevMsgs];
+                const responseId = `response_${tmp_id}`;
+                const existingIndex = newMsgs.findIndex(msg => msg.messageID === responseId);
 
-            const last = newMsgs[newMsgs.length - 1];
-            newMsgs[newMsgs.length - 1] = {
-                ...last,
-                content: last.content + chunk,
-            };
-            return newMsgs;
-        });
-    }, []);
+                if (existingIndex !== -1) {
+                    const existing = newMsgs[existingIndex];
+                    newMsgs[existingIndex] = {
+                        ...existing,
+                        content: existing.content + chunk,
+                    };
+                } else {
+                    newMsgs.push({
+                        messageID: responseId,
+                        sessionID: session_id,
+                        role: "assistant",
+                        content: chunk,
+                        createdAt: new Date(),
+                        isThinking: false,
+                        thinkingText: "",
+                    });
+                }
+                return newMsgs;
+            });
+        }, 
+        []
+    );
 
     const sendMessage = useCallback(
-        async (content: string, setUsersFound: (found: User[]) => void) => {
-            if (!activeSessionId) return;
-            updateMessages(content, "user");
+        async (session_id: string, content: string, setUsersFound: (found: User[]) => void) => {
+            console.log('session_id in sendMessage: ', session_id);
+            updateMessages(session_id, content, "user");
 
             setIsLoading(true);
             const collected: User[] = [];
 
             try {
-                await searchService.search(activeSessionId, content, {
-                    onThought: streamThought,
-                    onResponse: streamResponse,
+                await searchService.search(session_id, content, {
+                    onThought: (chunk: string, tmp_id: string) => { streamThought(session_id, chunk, tmp_id) },
+                    onResponse: (chunk: string, tmp_id: string) => { streamResponse(session_id, chunk, tmp_id) },
                     onFoundUsers: (user: User) => {
                         collected.push(user);
                         setUsersFound([...collected]);
@@ -136,13 +163,14 @@ export const useChat = () => {
             try {
                 const pastMessages: SingleMessage[] = await searchService.loadSession(sessionId);
 
-                // Convert each SingleMessage into a DraftMessage (all fields present)
                 const draftMsgs: DraftMessage[] = pastMessages.map((m) => ({
                     messageID: m.messageID ?? undefined,
                     sessionID: m.sessionID ?? undefined,
                     role: m.role,
                     content: m.content,
                     createdAt: m.createdAt ? new Date(m.createdAt) : new Date(),
+                    isThinking: false,
+                    thinkingText: "",
                 }));
 
                 setMessages(draftMsgs);
@@ -166,34 +194,30 @@ export const useChat = () => {
     const createSessionTab = useCallback(
         async (sessionID: string, query: string) => {
             try {
-                // First create the backend session to get a real session ID
-                const realSessionId = await searchService.createSession(user?.userID || null);
-                
-                // Add temporary session with empty title for loading state
                 addToSessionList({
-                    sessionID: realSessionId,
-                    title: "", // Empty title triggers typing animation
+                    sessionID: sessionID,
+                    title: "",
                     createdAt: new Date(),
                     userID: user?.userID || null,
                 });
                 
-                // Update URL to use real session ID and select the session
-                router.replace(`/chat/${realSessionId}`);
-                setTimeout(() => selectSession(realSessionId), 0);
+                router.replace(`/chat/${sessionID}`);
+                setActiveSessionId(sessionID);
+                setSearchResult(null);
                 
-                // Then get the summary using the real session ID
-                const summary = await searchService.summarize(query, realSessionId);
+                const summary = await searchService.summarize(query, sessionID);
                 
-                // Update the session with the summary title
                 setSessions((prev) => 
                     prev.map((session) =>
-                        session.sessionID === realSessionId
+                        session.sessionID === sessionID
                             ? { ...session, title: summary }
                             : session
                     )
                 );
+
             } catch (error) {
                 console.error("Error creating session tab:", error);
+                throw error;
             } 
         },
         [addToSessionList, router, user?.userID]
@@ -223,6 +247,7 @@ export const useChat = () => {
         addToSessionList,
         createNewSession,
         createSessionTab,
+        updateMessages,
         sendMessage,
         selectSession,
         deleteSession,

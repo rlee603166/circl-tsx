@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { ChatWindow } from "@/components/chat/ChatWindow";
+import ChatWindow from "@/components/chat/ChatWindow";
 import { MessageInput } from "@/components/chat/MessageInput";
 import { User, SingleMessage } from "@/types";
 import { useParams } from "next/navigation";
@@ -31,17 +31,19 @@ const Index = () => {
         loadSessions,
     } = useChatContext();
 
+    useEffect(() => {
+        console.log("session_id in Index: ", session_id);
+    }, [session_id]);
+
     const boot = useCallback(async () => {
         try {
             const storedQuery = localStorage.getItem("userQuery");
 
             if (storedQuery) {
-
                 localStorage.removeItem("userQuery");
-                await Promise.all([
-                    createSessionTab(session_id, storedQuery),
-                    sendMessage(storedQuery, setUsersFound)
-                ]);
+                await createSessionTab(session_id, storedQuery);
+                console.log("real session_id in boot: ", session_id);
+                await sendMessage(session_id, storedQuery, setUsersFound)
             } else {
                 selectSession(session_id);
             }
@@ -49,14 +51,14 @@ const Index = () => {
             console.error("Error in boot:", error);
             router.push("/");
         }
-    }, [session_id, addToSessionList, createSessionTab, router]);
+    }, [session_id, addToSessionList, createSessionTab, router, sendMessage]);
 
     useEffect(() => {
         loadSessions();
     }, [loadSessions]);
 
     useEffect(() => {
-        if (!loading && session_id && session_id !== activeSessionId) {
+        if (!loading && session_id) {
             boot();
         }     
     }, [session_id, loading]);
@@ -66,7 +68,7 @@ const Index = () => {
     }, [session_id]);
 
     const handleSendMessage = async (message: string) => {
-        await sendMessage(message, setUsersFound);
+        await sendMessage(session_id, message, setUsersFound);
     };
 
     // Convert DraftMessage[] to SingleMessage[] for ChatWindow
@@ -76,6 +78,8 @@ const Index = () => {
         role: msg.role,
         content: msg.content,
         createdAt: msg.createdAt || null,
+        isThinking: msg.isThinking || false,
+        thinkingText: msg.thinkingText || "",
     }));
 
     return (

@@ -53,8 +53,8 @@ export default function WelcomeScreen() {
 
         try {
             localStorage.setItem("userQuery", message.trim());
-            const tempSessionId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            router.push(`/chat/${tempSessionId}`);
+            const session_id = await searchService.createSession();
+            router.push(`/chat/${session_id}`);
         } catch (err) {
             console.error("Error creating session:", err);
         }

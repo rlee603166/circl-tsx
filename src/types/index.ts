@@ -5,7 +5,9 @@ export interface DraftMessage {
     role: string;
     content: string;
     createdAt: Date;
-  }
+    isThinking: boolean | null;
+    thinkingText: string | null;
+}
   
 
 export interface SingleMessage {
@@ -14,6 +16,8 @@ export interface SingleMessage {
     role:       string;
     content:    string;
     createdAt:  Date | null;
+    isThinking: boolean;
+    thinkingText: string;
 }
 
 export interface User {

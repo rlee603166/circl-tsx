@@ -1,5 +1,6 @@
 import { ENDPOINTS } from "@/api.config.js";
 import { authService } from "./AuthService";
+import { v4 as uuidv4 } from 'uuid';
 
 export const searchService = {
     summarize: async (query, session_id) => {
@@ -83,6 +84,8 @@ export const searchService = {
             const decoder = new TextDecoder();
             let buffer = "";
 
+            const tmp_id = Math.random().toString(36).substring(2, 15);
+
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) {
@@ -105,7 +108,7 @@ export const searchService = {
 
                             switch (data.type) {
                                 case "thought":
-                                    onThought?.(data.message);
+                                    onThought?.(data.message, tmp_id);
                                     break;
                                 case "action":
                                     onAction?.(data.message);
@@ -121,7 +124,7 @@ export const searchService = {
                                     onFoundUsers?.(data.message);
                                     break;
                                 case "response":
-                                    onResponse?.(data.message);
+                                    onResponse?.(data.message, tmp_id);
                                     break;
                                 case "status":
                                     onStatus?.(data.message);
@@ -185,7 +188,7 @@ export const searchService = {
         }
     },
 
-    createSession: async user_id => {
+    createSession: async () => {
         if (!authService.isAuthenticated()) {
             throw new Error("Authentication required to create session");
         }
@@ -194,7 +197,6 @@ export const searchService = {
             const response = await authService.authenticatedFetch(ENDPOINTS.session, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ user_id }),
             });
 
             if (!response.ok) {
@@ -204,7 +206,7 @@ export const searchService = {
             }
 
             const data = await response.json();
-            return data.session_id;
+            return data.session_id.trim();
         } catch (error) {
             console.error("Error creating session:", error);
             throw error;
