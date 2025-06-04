@@ -19,7 +19,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, className = "" }) => 
     return (
         <div className={`flex flex-col h-full ${className}`}>
             <div className="flex-1 overflow-y-auto">
-                <div className="p-4 space-y-2 min-h-full">
+                <div className="space-y-2 min-h-full">
                     {messages.length === 0 ? (
                         <div className="flex items-center justify-center h-full text-gray-500">
                             <div className="text-center">

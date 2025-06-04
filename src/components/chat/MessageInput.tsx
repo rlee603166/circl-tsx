@@ -45,13 +45,13 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
     };
 
     return (
-        <div className="bg-white backdrop-blur-xl px-4 py-3 w-full">
+        <div className="bg-transparent w-full -mt-[25px] pb-2 relative z-10">
             <form
                 onSubmit={handleSubmit}
                 className="
                     flex flex-col w-full
-                    bg-white dark:bg-gray-700
-                    rounded-3xl px-6 py-3
+                    bg-white
+                    rounded-3xl px-3 pb-1 pt-2
                     gap-y-2 shadow-md
                     border border-solid border-gray-200 rounded-3xl
                 "

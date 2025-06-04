@@ -2,6 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: transparent;
     /* padding: 12px; */
     /* padding: 1rem; */
     /* border-bottom: 1px solid #e5e7eb; */
@@ -20,7 +21,7 @@
 
 .collapsed-buttons {
     display: flex;
-    flex-dirextion: row;
+    flex-direction: row;
     /* gap: 4px; */
 }
 
