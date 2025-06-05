@@ -261,7 +261,7 @@ const WelcomeScreen = () => {
   }
 
   return (
-    <div className="min-h-screen flex relative">
+    <div className="max-h-[100vh] min-h-screen flex relative">
       {/* Header */}
       <div className="cursor-pointer absolute top-5 left-7 z-10" onClick={() => router.push("/new")}>
         <h1 className="text-2xl font-bold text-black">circl.</h1>
