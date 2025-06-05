@@ -5,9 +5,10 @@ import styles from "./MessageInput.module.css";
 interface MessageInputProps {
     onSendMessage: (message: string) => (void | Promise<void>);
     disabled?: boolean;
+    mode?: "welcome" | "chat";
 }
 
-export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disabled = false }) => {
+export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disabled = false, mode = "welcome" }) => {
     const [deep, setDeep] = useState(false);
     const [network, setNetwork] = useState(false);
     const [message, setMessage] = useState("");
@@ -45,14 +46,22 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
     };
 
     return (
-        <div className="bg-white backdrop-blur-xl px-4 py-3 w-full">
+        <div
+            className={`
+                bg-transparent
+                w-full max-w-[750px] mx-auto
+                ${mode === "welcome" ? "pb-2" : "-mt-[50px] pb-4"}
+                relative
+                z-10
+            `}
+        >
             <form
                 onSubmit={handleSubmit}
                 className="
                     flex flex-col w-full
-                    bg-white dark:bg-gray-700
-                    rounded-3xl px-6 py-3
-                    gap-y-2 shadow-md
+                    bg-white
+                    rounded-3xl pl-[10px] pr-[8px] py-[8px]
+                    gap-y-1 shadow-md
                     border border-solid border-gray-200 rounded-3xl
                 "
             >
@@ -72,13 +81,13 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                     style={{ lineHeight: "1.4" }}
                 />
 
-                <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center justify-between mt-[6px]">
                     <div className="flex space-x-2">
                         <button
                             type="button"
                             onClick={() => setDeep(p => !p)}
                             className={`
-                                px-4 py-1 rounded-full text-sm transition-colors
+                                px-2 py-1 rounded-full text-sm transition-colors
                                 ${
                                     deep
                                         ? "bg-blue-50 border border-blue-200/50"
@@ -92,7 +101,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                             type="button"
                             onClick={() => setNetwork(p => !p)}
                             className={`
-                                px-4 py-1 rounded-full text-sm transition-colors
+                                px-2 py-1 rounded-full text-sm transition-colors
                                 ${
                                     network
                                         ? "bg-blue-50 border border-blue-200/50"

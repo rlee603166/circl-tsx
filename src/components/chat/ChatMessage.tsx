@@ -48,7 +48,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         return (
             <div className="flex justify-end mb-6 animate-fade-in">
                 <div className="flex flex-col items-end max-w-xs lg:max-w-md">
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-2xl rounded-br-md shadow-lg">
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-2xl">
                         <div className="text-sm leading-relaxed">
                             {formatUserContent(message.content)}
                         </div>

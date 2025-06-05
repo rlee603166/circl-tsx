@@ -91,6 +91,7 @@ const Index = () => {
             <MessageInput
                 onSendMessage={handleSendMessage}
                 disabled={isLoading}
+                mode="chat"
             />
         </>
     );

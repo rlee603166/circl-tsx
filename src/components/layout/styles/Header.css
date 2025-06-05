@@ -2,11 +2,32 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* background: transparent; */
     /* padding: 12px; */
     /* padding: 1rem; */
     /* border-bottom: 1px solid #e5e7eb; */
     z-index: 30;
     width: 100%;
+}
+
+.responsive-header-bg {
+    background: transparent;
+}
+
+/* White background when screen width is around 1050px and below */
+@media (max-width: 1050px) {
+    .responsive-header-bg {
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+    }
+}
+
+/* Transparent background when screen width is above 1050px */
+@media (min-width: 1051px) {
+    .responsive-header-bg {
+        background: transparent;
+        border-bottom: none;
+    }
 }
 
 .logo-container {
@@ -20,7 +41,7 @@
 
 .collapsed-buttons {
     display: flex;
-    flex-dirextion: row;
+    flex-direction: row;
     /* gap: 4px; */
 }
 
