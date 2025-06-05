@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Professional, SearchResult } from '@/types';
-import { ProfessionalCard } from './ProfessionalCard';
+import { SearchResult } from '@/types';
+import { UserCard } from './UserCard';
 import { ChevronDown, ChevronUp, Users, Search } from 'lucide-react';
 
 interface ArtifactPanelProps {
@@ -48,12 +48,12 @@ export const ArtifactPanel: React.FC<ArtifactPanelProps> = ({ searchResult, isVi
       {!isCollapsed && (
         <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-white/40 to-gray-50/60">
           <div className="space-y-4">
-            {searchResult.professionals.map((professional) => (
-              <ProfessionalCard key={professional.id} professional={professional} />
+            {searchResult.usersFound.map((user) => (
+              <UserCard key={user.userId} user={user} />
             ))}
           </div>
           
-          {searchResult.professionals.length === 0 && (
+          {searchResult.usersFound.length === 0 && (
             <div className="text-center py-12">
               <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" strokeWidth={1.5} />
               <p className="text-gray-500 font-light">No professionals found for this search.</p>

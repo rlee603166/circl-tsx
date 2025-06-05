@@ -127,7 +127,7 @@ export default function Header({
                 )}
                 <div 
                     className="app-title"
-                    onClick={() => router.push("/")}
+                    onClick={createNewSession}
                 >
                     circl.
                 </div>

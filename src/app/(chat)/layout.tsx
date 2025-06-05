@@ -6,12 +6,12 @@ import { ChatSidebar } from "@/components/sidebar/ChatSidebar";
 import { ResizableLayout } from "@/components/layout/ResizableLayout";
 import { ArtifactPanel } from "@/components/artifacts/ArtifactPanel";
 import { Menu } from "lucide-react";
-import { User } from "@/types";
+import { UserFound } from "@/types";
 import { useRouter } from "next/navigation";
 
 const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const router = useRouter();
-    const [usersFound, setUsersFound] = useState<User[]>([]);
+    const [usersFound, setUsersFound] = useState<UserFound[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -22,6 +22,7 @@ const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }
         searchResult,
         isLoading,
         messages,
+        setActiveSessionId,
         createNewSession,
         sendMessage,
         selectSession,
@@ -34,17 +35,27 @@ const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }
         loadSessions();
     }, [loadSessions]);
 
-    const handleNewSession = () => {
+    const handleNewSession = React.useCallback(async () => {
+        console.log('handleNewSession called - current activeSessionId:', activeSession?.sessionID);
+        
+        // First, explicitly clear the active session
+        setActiveSessionId(null);
+        console.log('setActiveSessionId(null) called');
+        
+        // Then call the createNewSession function from the hook
         createNewSession();
+        console.log('createNewSession() called');
+        
+        // Close mobile sidebar if open
         setIsSidebarOpen(false);
-    };
+    }, [createNewSession, setActiveSessionId, activeSession?.sessionID]);
 
     const onSelectSession = (id: string) => {
         selectSession(id);
         router.push(`/chat/${id}`);
     };
 
-    const showArtifactPanel = !!searchResult && searchResult.professionals.length > 0;
+    const showArtifactPanel = !!searchResult && searchResult.usersFound.length > 0;
 
     return (
         <div
@@ -57,7 +68,7 @@ const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }
                 <ResizableLayout
                     isCollapsed={isCollapsed}
                     setIsCollapsed={setIsCollapsed}
-                    createNewSession={createNewSession}
+                    createNewSession={handleNewSession}
                     sidebar={
                         <div className="hidden lg:block h-full">
                             <ChatSidebar

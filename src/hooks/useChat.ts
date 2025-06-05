@@ -1,6 +1,6 @@
 // ── src/hooks/useChat.ts ──
 import { useState, useCallback, useEffect } from "react";
-import { Session, User, SearchResult, SingleMessage, DraftMessage } from "@/types";
+import { Session, User, SearchResult, SingleMessage, DraftMessage, UserFound, ApiUserFound, mapApiUserFoundToUserFound } from "@/types";
 import { useRouter } from "next/navigation";
 import { searchService } from "@/services/searchService";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,6 +11,7 @@ export const useChat = () => {
     const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [messages, setMessages] = useState<DraftMessage[]>([]);
+    const [usersFound, setUsersFound] = useState<UserFound[]>([]);
 
     const router = useRouter();
     const { user } = useAuth();
@@ -36,28 +37,16 @@ export const useChat = () => {
         setActiveSessionId(null);
         setSearchResult(null);
         setMessages([]);
-    }, []);
-
-    const updateMessages = useCallback(
-        (session_id: string, content: string, role: "user" | "assistant") => {
-
-            const newMsg: DraftMessage = {
-                messageID: generateTempId(),
-                sessionID: session_id,
-                role,
-                content,
-                createdAt: new Date(),
-                isThinking: false,
-                thinkingText: "",
-            };
-
-            setMessages((prev) => [...prev, newMsg]);
-        },
-        [activeSessionId]
-    );
+        setUsersFound([]);
+    }, [router, activeSessionId]);
 
     const streamThought = useCallback(
         (session_id: string, chunk: string, tmp_id: string) => {
+            if (!tmp_id) {
+                console.warn('streamThought called without tmp_id');
+                return;
+            }
+            
             setMessages((prevMsgs) => {
                 const newMsgs = [...prevMsgs];
                 const thoughtId = `${tmp_id}_thought`;
@@ -89,9 +78,15 @@ export const useChat = () => {
 
     const streamResponse = useCallback(
         (session_id: string, chunk: string, tmp_id: string) => {
+            if (!tmp_id) {
+                console.warn('streamResponse called without tmp_id');
+                return;
+            }
+            
             setMessages((prevMsgs) => {
                 const newMsgs = [...prevMsgs];
                 const responseId = `response_${tmp_id}`;
+                console.log('responseId: ', responseId);
                 const existingIndex = newMsgs.findIndex(msg => msg.messageID === responseId);
 
                 if (existingIndex !== -1) {
@@ -117,30 +112,6 @@ export const useChat = () => {
         []
     );
 
-    const sendMessage = useCallback(
-        async (session_id: string, content: string, setUsersFound: (found: User[]) => void) => {
-            console.log('session_id in sendMessage: ', session_id);
-            updateMessages(session_id, content, "user");
-
-            setIsLoading(true);
-            const collected: User[] = [];
-
-            try {
-                await searchService.search(session_id, content, {
-                    onThought: (chunk: string, tmp_id: string) => { streamThought(session_id, chunk, tmp_id) },
-                    onResponse: (chunk: string, tmp_id: string) => { streamResponse(session_id, chunk, tmp_id) },
-                    onFoundUsers: (user: User) => {
-                        collected.push(user);
-                        setUsersFound([...collected]);
-                    },
-                });
-            } finally {
-                setIsLoading(false);
-            }
-        },
-        [activeSessionId, streamThought, streamResponse, updateMessages]
-    );
-
     const loadSessions = useCallback(async () => {
         const fetchedSessions = await searchService.getUserSessions();
         if (!fetchedSessions || fetchedSessions.length === 0) return;
@@ -152,10 +123,30 @@ export const useChat = () => {
             userID: session.user_id,
         }));
         
-        // Sort sessions by most recent first
-        sessionTypes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        
-        setSessions([...sessionTypes]);
+        // Merge with existing sessions to avoid duplicates
+        setSessions((prev) => {
+            const sessionMap = new Map<string, Session>();
+            
+            // Add existing sessions to map
+            prev.forEach(session => {
+                if (session.sessionID) {
+                    sessionMap.set(session.sessionID, session);
+                }
+            });
+            
+            // Add/update with fetched sessions
+            sessionTypes.forEach(session => {
+                if (session.sessionID) {
+                    sessionMap.set(session.sessionID, session);
+                }
+            });
+            
+            // Convert back to array and sort by most recent first
+            const mergedSessions = Array.from(sessionMap.values());
+            mergedSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            
+            return mergedSessions;
+        });
     }, []);
 
     const loadSessionMessages = useCallback(
@@ -182,13 +173,50 @@ export const useChat = () => {
         []
     );
 
-    const selectSession = useCallback(
-        async (id: string) => {
-            setActiveSessionId(id);
-            setSearchResult(null);
-            await loadSessionMessages(id);
+    const updateMessages = useCallback(
+        (session_id: string, content: string, role: "user" | "assistant", isInitial: boolean = false) => {
+
+            const newMsg: DraftMessage = {
+                messageID: generateTempId(),
+                sessionID: session_id,
+                role,
+                content,
+                createdAt: new Date(),
+                isThinking: false,
+                thinkingText: "",
+            };
+
+            if (isInitial) {
+                setMessages([newMsg]);
+            } else {
+                setMessages((prev) => [...prev, newMsg]);
+            }
         },
-        [loadSessionMessages]
+        [activeSessionId]
+    );
+
+    const sendMessage = useCallback(
+        async (session_id: string, content: string, isInitial: boolean = false) => {
+            console.log('session_id in sendMessage: ', session_id);
+            updateMessages(session_id, content, "user", isInitial);
+
+            setIsLoading(true);
+            const collected: UserFound[] = [];
+
+            try {
+                await searchService.search(session_id, content, {
+                    onThought: (chunk: string, tmp_id: string) => { streamThought(session_id, chunk, tmp_id) },
+                    onResponse: (chunk: string, tmp_id: string) => { streamResponse(session_id, chunk, tmp_id) },
+                    onFoundUsers: (user: ApiUserFound) => {
+                        collected.push(mapApiUserFoundToUserFound(user));
+                        setUsersFound([...collected]);
+                    },
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [activeSessionId, streamThought, streamResponse, updateMessages]
     );
 
     const createSessionTab = useCallback(
@@ -201,9 +229,10 @@ export const useChat = () => {
                     userID: user?.userID || null,
                 });
                 
+                setSearchResult(null);
+                setUsersFound([]);
                 router.replace(`/chat/${sessionID}`);
                 setActiveSessionId(sessionID);
-                setSearchResult(null);
                 
                 const summary = await searchService.summarize(query, sessionID);
                 
@@ -223,6 +252,16 @@ export const useChat = () => {
         [addToSessionList, router, user?.userID]
     );
 
+    const selectSession = useCallback(
+        async (id: string) => {
+            setActiveSessionId(id);
+            setSearchResult(null);
+            setUsersFound([]);
+            setMessages([]);
+            await loadSessionMessages(id);
+        },
+        [loadSessionMessages]
+    );
     // ─── Delete a session entirely
     const deleteSession = useCallback(
         (id: string) => {
@@ -240,6 +279,7 @@ export const useChat = () => {
         sessions,
         activeSessionId,
         activeSession,
+        setActiveSessionId,
         // Expose `DraftMessage[]` here. Components can treat messageID as possibly `undefined`.
         messages,
         searchResult,

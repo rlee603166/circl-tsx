@@ -1,11 +1,12 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import { useChat } from "@/hooks/useChat";
-import { Session, User, SearchResult, DraftMessage } from "@/types";
+import { Session, User, SearchResult, DraftMessage, UserFound } from "@/types";
 
 interface ChatContextType {
     sessions: Session[];
     activeSessionId: string | null;
     activeSession: Session | null;
+    setActiveSessionId: (id: string | null) => void;
     messages: DraftMessage[];
     searchResult: SearchResult | null;
     isLoading: boolean;
@@ -13,7 +14,7 @@ interface ChatContextType {
     createNewSession: () => void;
     createSessionTab: (sessionID: string, query: string) => Promise<void>;
     updateMessages: (session_id: string, content: string, role: "user" | "assistant") => void;
-    sendMessage: (session_id: string, content: string, setUsersFound: (found: User[]) => void) => Promise<void>;
+    sendMessage: (session_id: string, content: string, isInitial: boolean) => Promise<void>;
     selectSession: (id: string) => Promise<void>;
     deleteSession: (id: string) => void;
     loadSessions: () => Promise<void>;
