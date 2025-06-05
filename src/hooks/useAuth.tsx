@@ -93,7 +93,7 @@ export const useAuth = (): UseAuthReturn => {
         localStorage.removeItem("refreshToken");
         setHasJWT(false);
         setUser(null);
-        signOut({ callbackUrl: "/login" });
+        signOut({ callbackUrl: "/" });
     };
 
     return {

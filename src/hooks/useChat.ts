@@ -33,7 +33,7 @@ export const useChat = () => {
     }, []);
 
     const createNewSession = useCallback(() => {
-        router.push("/");
+        router.push("/new");
         setActiveSessionId(null);
         setSearchResult(null);
         setMessages([]);

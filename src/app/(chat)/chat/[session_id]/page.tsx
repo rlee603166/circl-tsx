@@ -45,7 +45,7 @@ const Index = () => {
             }
         } catch (error) {
             console.error("Error in boot:", error);
-            router.push("/");
+            router.push("/login");
         }
     }, [session_id, router, sendMessage, selectSession, createSessionTab]);
 
