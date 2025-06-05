@@ -209,6 +209,7 @@ export const useChat = () => {
                     onResponse: (chunk: string, tmp_id: string) => { streamResponse(session_id, chunk, tmp_id) },
                     onFoundUsers: (user: ApiUserFound) => {
                         collected.push(mapApiUserFoundToUserFound(user));
+                        console.log('collected: ', JSON.stringify(collected, null, 2));
                         setUsersFound([...collected]);
                     },
                 });
@@ -282,7 +283,7 @@ export const useChat = () => {
         setActiveSessionId,
         // Expose `DraftMessage[]` here. Components can treat messageID as possibly `undefined`.
         messages,
-        searchResult,
+        usersFound,
         isLoading,
         addToSessionList,
         createNewSession,

@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 
 const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const router = useRouter();
-    const [usersFound, setUsersFound] = useState<UserFound[]>([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -19,7 +18,7 @@ const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }
     const {
         sessions,
         activeSession,
-        searchResult,
+        usersFound,
         isLoading,
         messages,
         setActiveSessionId,
@@ -55,7 +54,7 @@ const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }
         router.push(`/chat/${id}`);
     };
 
-    const showArtifactPanel = !!searchResult && searchResult.usersFound.length > 0;
+    const showArtifactPanel = !!usersFound && usersFound.length > 0;
 
     return (
         <div
@@ -105,7 +104,7 @@ const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }
                         </div>
                     }
                     artifactPanel={
-                        <ArtifactPanel searchResult={searchResult} isVisible={showArtifactPanel} />
+                        <ArtifactPanel usersFound={usersFound} isVisible={showArtifactPanel} />
                     }
                     showArtifactPanel={showArtifactPanel}
                 />
