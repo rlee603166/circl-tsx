@@ -268,8 +268,8 @@ const WelcomeScreen = () => {
       </div>
 
       {/* Left Side - Login Card */}
-      <div className="w-full lg:w-1/2 flex justify-center px-8 pt-24 pb-12 bg-gray-50">
-        <div className="w-full max-w-md">
+      <div className="w-full lg:w-1/2 flex justify-center px-8 bg-gray-50">
+        <div className="w-full max-w-md my-[17vh]">
           {/* Inspiring headline section */}
           <div className="mb-8  text-center">
             <h1 className="text-5xl font-light text-gray-900 leading-tight mb-4 tracking-tight">
@@ -452,9 +452,9 @@ const WelcomeScreen = () => {
       </div>
       
       {/* Right Side - Demo */}
-      <div className="w-full lg:w-1/2 flex justify-center px-8 py-4 bg-white">
-        <div className="w-full max-w-2xl">
-          <div className="pt-20">
+      <div className="w-full lg:w-1/2 flex justify-center px-8 bg-white">
+        <div className="w-full max-w-2xl my-[17vh] py-auto">
+          <div className="">
             <div className="bg-gray-50 rounded-3xl border border-gray-200 shadow-lg p-8 relative overflow-hidden w-full">
               <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 pointer-events-none" />
               <div className="relative">
