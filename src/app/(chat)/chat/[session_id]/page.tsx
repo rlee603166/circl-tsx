@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ChatWindow from "@/components/chat/ChatWindow";
 import { MessageInput } from "@/components/chat/MessageInput";
-import { User, SingleMessage } from "@/types";
+import { SingleMessage, UserFound } from "@/types";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,8 +14,6 @@ const Index = () => {
     const router = useRouter();
     const session_id = params?.session_id as string;
     const { loading, isAuthenticated } = useAuth();
-
-    const [usersFound, setUsersFound] = useState<User[]>([]);
     const [isManuallySelecting, setIsManuallySelecting] = useState(false);
 
     const {
@@ -28,7 +26,6 @@ const Index = () => {
         sendMessage,
         selectSession,
         createSessionTab,
-        loadSessions,
     } = useChatContext();
 
     useEffect(() => {
@@ -42,8 +39,7 @@ const Index = () => {
             if (storedQuery) {
                 localStorage.removeItem("userQuery");
                 await createSessionTab(session_id, storedQuery);
-                console.log("real session_id in boot: ", session_id);
-                await sendMessage(session_id, storedQuery, setUsersFound)
+                await sendMessage(session_id, storedQuery, true);
             } else {
                 selectSession(session_id);
             }
@@ -51,24 +47,20 @@ const Index = () => {
             console.error("Error in boot:", error);
             router.push("/");
         }
-    }, [session_id, addToSessionList, createSessionTab, router, sendMessage]);
-
-    useEffect(() => {
-        loadSessions();
-    }, [loadSessions]);
+    }, [session_id, router, sendMessage, selectSession, createSessionTab]);
 
     useEffect(() => {
         if (!loading && session_id) {
             boot();
         }     
-    }, [session_id, loading]);
+    }, [session_id, loading, boot]);
 
     useEffect(() => {
         setIsManuallySelecting(false);
     }, [session_id]);
 
     const handleSendMessage = async (message: string) => {
-        await sendMessage(session_id, message, setUsersFound);
+        await sendMessage(session_id, message, false);
     };
 
     // Convert DraftMessage[] to SingleMessage[] for ChatWindow

@@ -142,8 +142,6 @@ export const searchService = {
                         }
                     }
                 }
-
-                onThought?.("");
             }
         } catch (error) {
             console.error("Search error:", error);
