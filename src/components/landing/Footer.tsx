@@ -1,12 +1,23 @@
-import React from 'react';
-import { CircleUser, ArrowUp, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { CircleUser, ArrowUp } from 'lucide-react';
 
-const Footer = () => {
+interface FooterProps {
+  openWaitlistModal: (email?: string) => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ openWaitlistModal }) => {
+  const [footerEmail, setFooterEmail] = useState('');
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
+  };
+
+  const handleJoinClick = () => {
+    openWaitlistModal(footerEmail);
+    setFooterEmail(''); // Clear the input after attempting to open modal
   };
 
   return (
@@ -34,11 +45,16 @@ const Footer = () => {
             <div className="relative">
               <input 
                 type="email" 
-                placeholder="Your email"
+                placeholder="Enter email for waitlist"
+                value={footerEmail}
+                onChange={(e) => setFooterEmail(e.target.value)}
                 className="w-64 py-2.5 px-4 rounded-full bg-gray-50 border border-gray-200 focus:border-gray-300 outline-none text-gray-700 text-sm placeholder:text-gray-400" 
               />
-              <button className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white">
-                <ArrowRight className="w-4 h-4" />
+              <button 
+                onClick={handleJoinClick}
+                className="absolute right-1 top-1/2 -translate-y-1/2 w-auto h-8 px-3 rounded-full bg-purple-600 flex items-center justify-center text-white text-sm hover:bg-purple-700 transition-colors"
+              >
+                Join
               </button>
             </div>
             

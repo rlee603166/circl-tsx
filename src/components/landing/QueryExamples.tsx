@@ -1,110 +1,77 @@
-import React, { useRef } from 'react';
-import { ArrowLeft, ArrowRight, Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 const queries = [
-  "Ex-Stripe PMs in AI startups",
-  "VCs who used to be founders",
-  "People like me who became PMs",
-  "Crypto engineers post-FTX",
-  "Ex-MBB consultants who joined startups",
-  "Product managers who switched to design",
-  "Ex-Google engineers at startups",
-  "Finance professionals in climate tech"
+  "Where do ex-YC founders go after their first startup winds down?",
+  "Ex-AI researchers from DeepMind now working in robotics startups",
+  "Ex-MBB consultants who became Chief of Staff at Series A companies",
+  "Crypto operators who pivoted into climate or defense in 2024–25",
+  "Ex-FANG PMs who joined sub-20 person AI infra startups",
+  "Founders in healthcare AI who started as academic researchers",
+  "Startup COOs who were previously in education or nonprofit work",
+  "Ex-Palantir engineers who became solo founders post-2023",
+  "Designers who transitioned into Head of Product roles",
+  "Where did OpenAI alumni from 2022–2023 end up?",
+  "People who left Bridgewater and later raised VC funding",
+  "Ex-bankers now building fintech products in LATAM",
+  "Operators who left unicorns in 2023 and joined seed-stage companies",
+  "What kind of people do a16z repeatedly back in AI?",
+  "VCs who used to be startup lawyers or policy analysts",
+  "Where do crypto founders go after shutting down their startups?"
 ];
 
-const QueryCard = ({ query }: { query: string }) => {
-  return (
-    <div className="flex-shrink-0 w-full sm:w-[280px] p-5 rounded-2xl bg-white shadow-sm border border-gray-100">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
-          <Search className="w-4 h-4" />
-        </div>
-        <p className="text-gray-700 font-light">{query}</p>
-      </div>
-    </div>
-  );
-};
-
 const QueryExamples = () => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
-  const [canScrollRight, setCanScrollRight] = React.useState(true);
+  const [currentQuery, setCurrentQuery] = useState(0);
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
-    }
-  };
-
-  const checkScrollButtons = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  React.useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      container.addEventListener('scroll', checkScrollButtons);
-      checkScrollButtons();
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener('scroll', checkScrollButtons);
-      }
-    };
-  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentQuery((prev) => {
+        const next = (prev + 1) % queries.length;
+        return next;
+      });
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [queries.length]); // Add queries.length as dependency
 
   return (
     <section id="examples" className="py-20 px-6 md:px-10 lg:px-0 bg-white">
-      <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-light text-center text-gray-900 mb-4">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-light text-center text-gray-900 mb-8">
           Ask anything about careers
         </h2>
-        <p className="text-gray-600 font-light text-center max-w-2xl mx-auto mb-12">
+        <p className="text-xl md:text-2xl text-gray-600 font-light text-center max-w-3xl mx-auto mb-16">
           Discover hidden professional patterns with conversational queries
         </p>
         
-        <div className="relative">
-          <button 
-            onClick={scrollLeft}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all ${!canScrollLeft ? 'opacity-0' : 'opacity-100'}`}
-            disabled={!canScrollLeft}
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          
-          <div 
-            ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
+        <div className="max-w-6xl mx-auto">
+          <div className="relative h-36 overflow-hidden rounded-2xl backdrop-blur-xl bg-white/30 border border-gray-200/50 shadow-lg">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             {queries.map((query, index) => (
-              <div key={index} className="snap-start">
-                <QueryCard query={query} />
+              <div
+                key={index}
+                className={`absolute inset-0 flex items-center justify-center px-10 transition-all duration-1000 ${
+                  index === currentQuery
+                    ? "opacity-100 transform translate-y-0"
+                    : index < currentQuery
+                      ? "opacity-0 transform -translate-y-full"
+                      : "opacity-0 transform translate-y-full"
+                }`}
+              >
+                <p className="text-xl md:text-2xl font-light text-gray-700 text-center">"{query}"</p>
               </div>
             ))}
           </div>
-          
-          <button 
-            onClick={scrollRight}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all ${!canScrollRight ? 'opacity-0' : 'opacity-100'}`}
-            disabled={!canScrollRight}
-          >
-            <ArrowRight className="w-5 h-5" />
-          </button>
-          
-          <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-          <div className="absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+
+          <div className="flex justify-center mt-8 space-x-3">
+            {queries.map((_, index) => (
+              <button
+                key={index}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                  index === currentQuery ? "bg-purple-500 w-10" : "bg-gray-300"
+                }`}
+                onClick={() => setCurrentQuery(index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

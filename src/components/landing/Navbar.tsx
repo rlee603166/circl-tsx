@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { CircleUser } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-const Navbar = () => {
+interface NavbarProps {
+  openWaitlistModal: (email?: string) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +19,16 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleJoinWaitlistClick = () => {
+    openWaitlistModal();
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleSignInClick = () => {
+    router.push('/log-in');
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <header 
@@ -36,13 +52,19 @@ const Navbar = () => {
             Examples
           </a>
           <a href="#cta" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
-            Pricing
+            Get Started
           </a>
-          <button className="ml-4 px-5 py-2 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm font-light transition-all">
+          <button 
+            onClick={handleSignInClick}
+            className="ml-4 px-5 py-2 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm font-light transition-all"
+          >
             Sign In
           </button>
-          <button className="px-5 py-2 rounded-full bg-purple-600 text-white text-sm font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all">
-            Try Circl
+          <button 
+            onClick={handleJoinWaitlistClick} 
+            className="px-5 py-2 rounded-full bg-purple-600 text-white text-sm font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all"
+          >
+            Get Early Access
           </button>
         </nav>
 
@@ -79,14 +101,20 @@ const Navbar = () => {
             className="text-gray-600 hover:text-gray-900 py-2 text-lg font-light transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Pricing
+            Get Started
           </a>
           <div className="flex flex-col gap-3 pt-4">
-            <button className="w-full py-2.5 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-light transition-all">
+            <button 
+              onClick={handleSignInClick}
+              className="w-full py-2.5 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-light transition-all"
+            >
               Sign In
             </button>
-            <button className="w-full py-2.5 rounded-full bg-purple-600 text-white font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all">
-              Try Circl
+            <button 
+              onClick={handleJoinWaitlistClick} 
+              className="w-full py-2.5 rounded-full bg-purple-600 text-white font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all"
+            >
+              Join Waitlist
             </button>
           </div>
         </div>

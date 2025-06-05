@@ -74,21 +74,6 @@ export default function UnifiedAuth({ initialMode = "login" }) {
                         </button>
                     </div>
 
-                    {/* Toggle link with smooth transition */}
-                    <div className="h-6 mb-6 flex items-center justify-center">
-                        <p className="text-sm text-gray-600 transition-all duration-300 ease-in-out">
-                            {isLogin ? "Don't have an account? " : "Already have an account? "}
-                            <a 
-                                onClick={toggleMode}
-                                onMouseDown={(e) => e.preventDefault()} 
-                                className="hover:underline cursor-pointer transition-all duration-300 ease-in-out" 
-                                style={{ color: "#21B8CD" }}
-                            >
-                                {isLogin ? "Sign up" : "Log in"}
-                            </a>
-                        </p>
-                    </div>
-
                     {/* Divider */}
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center">
@@ -102,7 +87,7 @@ export default function UnifiedAuth({ initialMode = "login" }) {
                     {/* Social Login Buttons */}
                     {providers &&
                         Object.values(providers).map(provider => (
-                            <div key={provider.name} className="space-y-3">
+                            <div key={provider.name} className="space-y-3 mb-6">
                                 <button
                                     onClick={() => signIn(provider.id, { callbackUrl: "/" })}
                                     className="cursor-pointer w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
@@ -131,6 +116,21 @@ export default function UnifiedAuth({ initialMode = "login" }) {
                                 </button>
                             </div>
                         ))}
+
+                    {/* Toggle link with smooth transition */}
+                    <div className="h-6 mb-6 flex items-center justify-center">
+                        <p className="text-sm text-gray-600 transition-all duration-300 ease-in-out">
+                            {isLogin ? "Don't have an account? " : "Already have an account? "}
+                            <a 
+                                onClick={toggleMode}
+                                onMouseDown={(e) => e.preventDefault()} 
+                                className="hover:underline cursor-pointer transition-all duration-300 ease-in-out" 
+                                style={{ color: "#21B8CD" }}
+                            >
+                                {isLogin ? "Sign up" : "Log in"}
+                            </a>
+                        </p>
+                    </div>
 
                     {/* Footer Links */}
                     <div className="mt-8 flex justify-center space-x-4 text-sm text-gray-500">
