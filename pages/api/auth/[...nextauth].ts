@@ -4,8 +4,8 @@ import GoogleProvider from "next-auth/providers/google";
 export default NextAuth({
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
             authorization: {
                 params: {
                     scope: "openid email profile"
@@ -14,7 +14,7 @@ export default NextAuth({
         })    
     ],
     pages: {
-        signIn: "/log-in", 
+        signIn: "/login", 
     },
     callbacks: {
         async jwt({ token, account, user }) {
@@ -25,8 +25,10 @@ export default NextAuth({
             return token;
         },
         async session({ session, token }) {
-            session.accessToken = token.accessToken;
-            session.idToken = token.idToken;
+            if (token) {
+                session.accessToken = token.accessToken;
+                session.idToken = token.idToken;
+            }
             return session;
         },
     },

@@ -18,7 +18,7 @@ const LoadingSpinner = () => (
     </div>
 );
 
-export default function WelcomeScreen() {
+export default function ChatWelcomeScreen() {
     const [inputValue, setInputValue] = useState("");
     const router = useRouter();
     const { loading, isAuthenticated, user } = useAuth();

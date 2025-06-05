@@ -14,42 +14,54 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const queries = {
-    climate: {
-      question: "Past Meta employees at climate startups",
-      answer: "I found 23 former Meta employees now working at climate startups. Here are the notable ones:",
+    consulting: {
+      question: "Who left McKinsey for tech companies?",
+      answer: "I found 24 former McKinsey consultants now at major tech firms:",
+      type: "profiles",
       bullets: [
         { 
-          name: "Sarah Chen", 
-          title: "Lead Engineer at Rivian", 
-          previous: "Ex-Meta AI Engineer",
-          detail: "Led autonomous vehicle mapping initiatives"
+          name: "Jennifer Wu", 
+          title: "Director of Strategy at Uber", 
+          previous: "Ex-McKinsey Principal",
+          detail: "Leading marketplace expansion strategies"
         },
         { 
-          name: "Marcus Rodriguez", 
-          title: "VP Product at CarbonCure", 
-          previous: "Former Instagram PM",
-          detail: "Pioneering concrete carbon capture technology"
+          name: "Ahmed Hassan", 
+          title: "Head of Operations at Airbnb", 
+          previous: "Former McKinsey Senior Associate",
+          detail: "Optimizing global host acquisition programs"
         },
         { 
-          name: "Priya Patel", 
-          title: "Head of AI at Climeworks", 
-          previous: "Meta Research Scientist",
-          detail: "Developing ML models for direct air capture"
+          name: "Emily Rodriguez", 
+          title: "VP Product Strategy at Spotify", 
+          previous: "McKinsey Engagement Manager",
+          detail: "Driving international market penetration"
         }
       ]
     },
-    ux: {
-      question: "Career paths for UX researchers",
-      answer: "Analyzed 156 UX researcher career transitions over the past 3 years:",
+    skills: {
+      question: "Most in-demand skills for product managers",
+      answer: "Analysis of 1,800+ PM job descriptions reveals key requirements:",
+      type: "skills",
       bullets: [
-        "42% became Senior UX Researchers or Principal UX Researchers",
-        "31% transitioned to Product Management roles",
-        "27% moved to UX Research leadership positions (Director, VP)"
+        { skill: "Data Analysis & SQL", demand: "89%", growth: "↑ 23%" },
+        { skill: "User Research & Design", demand: "76%", growth: "↑ 18%" },
+        { skill: "Technical/Engineering Background", demand: "64%", growth: "↑ 31%" }
+      ]
+    },
+    remote: {
+      question: "Where do remote workers relocate?",
+      answer: "Geographic analysis of 680 remote professionals over 2 years:",
+      type: "geographic",
+      bullets: [
+        { location: "Austin, Texas", percentage: "22%", trend: "↑ 45%" },
+        { location: "Miami, Florida", percentage: "18%", trend: "↑ 67%" },
+        { location: "Denver, Colorado", percentage: "15%", trend: "↑ 29%" }
       ]
     }
   };
 
-  const handleQueryClick = (queryType: 'climate' | 'ux') => {
+  const handleQueryClick = (queryType: 'consulting' | 'skills' | 'remote') => {
     if (isAnimating) return;
     
     // Reset state
@@ -149,21 +161,30 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
                       <p className="text-slate-600 text-md mb-4 font-light">Try these examples:</p>
                       <div className="space-y-3">
                         <button
-                          onClick={() => handleQueryClick('climate')}
+                          onClick={() => handleQueryClick('consulting')}
                           className="w-full text-left text-slate-600 text-md p-4 rounded-xl bg-white/80 hover:bg-white transition-all cursor-pointer border border-white/40 hover:shadow-md group"
                           disabled={isAnimating}
                         >
                           <span className="group-hover:text-slate-800 transition-colors">
-                            Ex-Google employees at climate startups
+                            Who left McKinsey for tech companies?
                           </span>
                         </button>
                         <button
-                          onClick={() => handleQueryClick('ux')}
+                          onClick={() => handleQueryClick('skills')}
                           className="w-full text-left text-slate-600 text-md p-4 rounded-xl bg-white/80 hover:bg-white transition-all cursor-pointer border border-white/40 hover:shadow-md group"
                           disabled={isAnimating}
                         >
                           <span className="group-hover:text-slate-800 transition-colors">
-                            Career paths for UX researchers
+                            Most in-demand skills for product managers
+                          </span>
+                        </button>
+                        <button
+                          onClick={() => handleQueryClick('remote')}
+                          className="w-full text-left text-slate-600 text-md p-4 rounded-xl bg-white/80 hover:bg-white transition-all cursor-pointer border border-white/40 hover:shadow-md group"
+                          disabled={isAnimating}
+                        >
+                          <span className="group-hover:text-slate-800 transition-colors">
+                            Where do remote workers relocate?
                           </span>
                         </button>
                       </div>
@@ -200,9 +221,9 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
                       </div>
                       {showAnswer && answerText.length === queries[activeQuery as keyof typeof queries].answer.length && (
                         <div className="mt-4 space-y-3">
-                          {activeQuery === 'climate' ? (
+                          {activeQuery === 'consulting' ? (
                             // Profile cards for people search
-                            (queries.climate.bullets as any[]).map((profile, index) => (
+                            (queries.consulting.bullets as any[]).map((profile, index) => (
                               <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                                 <div className="bg-white/80 rounded-xl p-4 border border-white/40 hover:bg-white transition-colors w-full">
                                   <div className="flex items-start space-x-3 w-full">
@@ -223,17 +244,52 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
                                 </div>
                               </div>
                             ))
+                          ) : activeQuery === 'skills' ? (
+                            // Skills demand display
+                            (queries.skills.bullets as any[]).map((skill, index) => (
+                              <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
+                                <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4 border border-orange-200 w-full">
+                                  <div className="flex items-center justify-between w-full">
+                                    <div className="flex-1">
+                                      <h4 className="font-medium text-slate-800 text-md mb-1">{skill.skill}</h4>
+                                      <div className="flex items-center space-x-2">
+                                        <span className="text-orange-700 text-lg font-semibold">{skill.demand}</span>
+                                        <span className="text-xs text-slate-500">demand</span>
+                                      </div>
+                                    </div>
+                                    <div className="text-right">
+                                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                        skill.growth.includes('↑') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                      }`}>
+                                        {skill.growth}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
                           ) : (
-                            // Traditional bullet points for insights
-                            (queries.ux.bullets as string[]).map((bullet, index) => (
-                              <div key={index} className={`flex items-center space-x-3 transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-                                <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
-                                  index === 0 ? 'bg-violet-400' : 
-                                  index === 1 ? 'bg-indigo-400' : 'bg-rose-400'
-                                }`} />
-                                <span className="text-md text-slate-600 font-light">
-                                  {bullet}
-                                </span>
+                            // Geographic distribution display
+                            (queries.remote.bullets as any[]).map((geo, index) => (
+                              <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
+                                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200 w-full">
+                                  <div className="flex items-center justify-between w-full">
+                                    <div className="flex-1">
+                                      <h4 className="font-medium text-slate-800 text-md mb-1">{geo.location}</h4>
+                                      <div className="flex items-center space-x-2">
+                                        <span className="text-blue-700 text-lg font-semibold">{geo.percentage}</span>
+                                        <span className="text-xs text-slate-500">of relocations</span>
+                                      </div>
+                                    </div>
+                                    <div className="text-right">
+                                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                        geo.trend.includes('↑') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                      }`}>
+                                        {geo.trend}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             ))
                           )}

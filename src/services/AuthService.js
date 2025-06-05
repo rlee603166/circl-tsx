@@ -74,7 +74,7 @@ class AuthService {
                     }
                 });
             } catch (refreshError) {
-                window.location.href = '/log-in';
+                window.location.href = '/login';
                 throw new Error("Authentication failed");
             }
         }

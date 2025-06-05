@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
   };
 
   const handleSignInClick = () => {
-    router.push('/log-in');
+    router.push('/login');
     setIsMobileMenuOpen(false);
   };
 

@@ -149,7 +149,7 @@ export const searchService = {
             if (error.message.includes("Authentication")) {
                 onStatus?.("Authentication error. Please log in again.");
                 setTimeout(() => {
-                    window.location.href = "/log-in";
+                    window.location.href = "/login";
                 }, 2000);
             } else if (error.message.includes("Network")) {
                 onStatus?.("Network error. Please check your connection.");

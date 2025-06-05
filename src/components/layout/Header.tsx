@@ -14,7 +14,7 @@ import { User } from "@/types";
 const UnauthenticatedButtons = () => {
     const router = useRouter();
     const handleLogin = () => {
-        router.push("/log-in");
+        router.push("/login");
     };
 
     const handleSignup = () => {

@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useChatContext } from "@/contexts/ChatContext";
-import WelcomeScreen from "@/components/chat/WelcomeScreen";
+import ChatWelcomeScreen from "@/components/chat/ChatWelcomeScreen";
 
 const Index = () => {
     const {
@@ -23,7 +23,7 @@ const Index = () => {
     return (
         <>
             {/* Welcome Screen */}
-            <WelcomeScreen />
+            <ChatWelcomeScreen />
         </>
     );
 };
