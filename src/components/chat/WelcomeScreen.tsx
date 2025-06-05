@@ -83,7 +83,7 @@ export default function WelcomeScreen() {
                                 </h1>
                                 <p className="welcome-subheading">How can I help you today?</p>
                             </div>
-                           <MessageInput onSendMessage={handleSubmit} />
+                            <MessageInput onSendMessage={handleSubmit} mode="welcome" />
                         </>
                     )}
                 </div>

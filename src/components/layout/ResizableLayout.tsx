@@ -25,15 +25,15 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
 }) => {
     return (
         <div className="flex h-screen w-full">
-            {/* Sidebar: width controlled by ChatSidebar’s own classes */}
+            {/* Sidebar: width controlled by ChatSidebar's own classes */}
             <div className="flex-shrink-0 h-full overflow-y-auto transition-all duration-300">
                 {sidebar}
             </div>
 
-            {/* Main area: header + chat/artifact */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden">
-                {/* Header sits above chat/artifact, but to the right of the sidebar */}
-                <div className="h-16 bg-transparent">
+            {/* Main area: chat/artifact with floating header */}
+            <div className="flex-1 h-full overflow-hidden relative">
+                {/* Floating Header - positioned absolutely to float above content */}
+                <div className="absolute top-0 left-0 right-0 z-50">
                     <Header 
                         isCollapsed={isCollapsed}
                         setIsCollapsed={setIsCollapsed}
@@ -41,12 +41,15 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
                     />
                 </div>
 
-                {/* Resizable chat vs. artifact panels */}
-                <div className="flex-1 overflow-hidden">
+                {/* Resizable chat vs. artifact panels - now takes full height */}
+                <div className="h-full overflow-hidden">
                     <ResizablePanelGroup direction="horizontal" className="h-full">
                         {/* Chat Panel */}
                         <ResizablePanel defaultSize={showArtifactPanel ? 60 : 100} minSize={40}>
-                            {chatWindow}
+                            {/* Add top padding to account for floating header */}
+                            <div className="h-full pt-16">
+                                {chatWindow}
+                            </div>
                         </ResizablePanel>
 
                         {/* Handle (only when artifact panel visible) */}
@@ -62,7 +65,10 @@ export const ResizableLayout: React.FC<ResizableLayoutProps> = ({
                         {/* Artifact Panel */}
                         {showArtifactPanel && (
                             <ResizablePanel defaultSize={40} minSize={25} maxSize={60}>
-                                {artifactPanel}
+                                {/* Add top padding to account for floating header */}
+                                <div className="h-full pt-16">
+                                    {artifactPanel}
+                                </div>
                             </ResizablePanel>
                         )}
                     </ResizablePanelGroup>

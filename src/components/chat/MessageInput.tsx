@@ -5,9 +5,10 @@ import styles from "./MessageInput.module.css";
 interface MessageInputProps {
     onSendMessage: (message: string) => (void | Promise<void>);
     disabled?: boolean;
+    mode?: "welcome" | "chat";
 }
 
-export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disabled = false }) => {
+export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disabled = false, mode = "welcome" }) => {
     const [deep, setDeep] = useState(false);
     const [network, setNetwork] = useState(false);
     const [message, setMessage] = useState("");
@@ -45,7 +46,15 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
     };
 
     return (
-        <div className="bg-transparent w-full -mt-[25px] pb-2 relative z-10">
+        <div
+            className={`
+                bg-transparent
+                w-full max-w-[750px] mx-auto
+                ${mode === "welcome" ? "pb-2" : "-mt-[50px] pb-4"}
+                relative
+                z-10
+            `}
+        >
             <form
                 onSubmit={handleSubmit}
                 className="

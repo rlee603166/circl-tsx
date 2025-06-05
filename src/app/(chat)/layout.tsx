@@ -48,7 +48,9 @@ const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }
 
     return (
         <div
-            className={`min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 transition-opacity duration-600 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+            className={`min-h-screen bg-white transition-opacity duration-600 ${
+                isLoaded ? "opacity-100" : "opacity-0"
+            }`}
         >
             {/* Main Layout */}
             <div className="h-screen">
@@ -74,10 +76,10 @@ const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }
                     chatWindow={
                         <div className="flex flex-col h-full bg-white">
                             {/* Centered container with max‑width */}
-                            <div className="flex flex-col h-full w-full max-w-[750px] mx-auto">
+                            <div className="flex flex-col h-full w-full">
                                 {/* Mobile Header for sidebar toggle */}
                                 <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200/30 glass-effect">
-                                    <h1 className="text-xl font-medium text-gray-800">Circl</h1>
+                                    <h1 className="text-xl font-medium text-gray-800">circl</h1>
                                     <button
                                         onClick={() => setIsSidebarOpen(true)}
                                         className="neumorphic-button p-2 rounded-lg transition-all duration-200 hover:scale-105"

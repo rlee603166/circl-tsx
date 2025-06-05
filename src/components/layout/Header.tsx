@@ -107,7 +107,7 @@ export default function Header({
     const { loading, isAuthenticated, user, logout } = useAuth();
 
     return (
-        <header className="chat-header">
+        <header className="chat-header responsive-header-bg">
             <div className={`logo-container ${isCollapsed ? "p-[11px]" : "p-[16px]"}`}>
                 {isCollapsed && (
                     <div className="collapsed-buttons">

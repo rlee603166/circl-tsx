@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import ChatMessage from "./ChatMessage";
 import { SingleMessage } from "@/types";
+import "./styles/Scrollbar.css";
 
 interface ChatWindowProps {
     messages: SingleMessage[];
@@ -18,8 +19,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, className = "" }) => 
 
     return (
         <div className={`flex flex-col h-full ${className}`}>
-            <div className="flex-1 overflow-y-auto">
-                <div className="space-y-2 min-h-full">
+            <div className="flex-1 overflow-y-auto custom-scrollbar pl-[10px]">
+                <div className="space-y-2 min-h-full max-w-[750px] mx-auto py-12">
                     {messages.length === 0 ? (
                         <div className="flex items-center justify-center h-full text-gray-500">
                             <div className="text-center">

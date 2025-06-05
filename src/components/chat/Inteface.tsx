@@ -52,6 +52,8 @@ const Interface = ({
         role: msg.role,
         content: msg.content,
         createdAt: msg.createdAt || null,
+        isThinking: false,
+        thinkingText: "",
     }));
 
     const onSelectSession = (id: string) => {
@@ -61,13 +63,16 @@ const Interface = ({
 
     return (
         <div
-            className={`min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30 transition-opacity duration-600 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+            className={`min-h-screen bg-white transition-opacity duration-600 ${
+                isLoaded ? "opacity-100" : "opacity-0"
+            }`}
         >
             {/* Main Layout */}
             <div className="h-screen">
                 <ResizableLayout
                     isCollapsed={isCollapsed}
                     setIsCollapsed={setIsCollapsed}
+                    createNewSession={handleNewSession}
                     sidebar={
                         <div className="hidden lg:block h-full">
                             <ChatSidebar
@@ -86,9 +91,9 @@ const Interface = ({
                     chatWindow={
                         <div className="flex flex-col h-full bg-white">
                             {/* Centered container with max‑width */}
-                            <div className="flex flex-col h-full w-full max-w-[750px] mx-auto">
+                            <div className="flex flex-col h-full w-full">
                                 {/* Mobile Header for sidebar toggle */}
-                                <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200/30 glass-effect">
+                                <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200/30 bg-white">
                                     <h1 className="text-xl font-medium text-gray-800">Circl</h1>
                                     <button
                                         onClick={() => setIsSidebarOpen(true)}
@@ -106,10 +111,12 @@ const Interface = ({
                                 )}
 
                                 {/* Message Input */}
-                                {modeType === "chat" && <MessageInput
-                                    onSendMessage={handleSendMessage}
-                                    disabled={isLoading}
-                                />}
+                                {modeType === "chat" && (
+                                    <MessageInput
+                                        onSendMessage={handleSendMessage}
+                                        disabled={isLoading}
+                                    />
+                                )}
                             </div>
                         </div>
                     }
