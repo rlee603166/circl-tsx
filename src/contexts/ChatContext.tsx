@@ -8,7 +8,7 @@ interface ChatContextType {
     activeSession: Session | null;
     setActiveSessionId: (id: string | null) => void;
     messages: DraftMessage[];
-    searchResult: SearchResult | null;
+    usersFound: UserFound[];
     isLoading: boolean;
     addToSessionList: (newSession: Session) => void;
     createNewSession: () => void;

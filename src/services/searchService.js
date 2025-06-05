@@ -121,7 +121,7 @@ export const searchService = {
                                     onUsers?.(data.message);
                                     break;
                                 case "users_found":
-                                    onFoundUsers?.(data.message);
+                                    onFoundUsers?.(data.users_found);
                                     break;
                                 case "response":
                                     onResponse?.(data.message, tmp_id);

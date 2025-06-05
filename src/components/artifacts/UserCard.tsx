@@ -56,6 +56,9 @@ interface UserCardProps {
 
 export const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
+  const experiences = sortExperiences(user.experiences);
+  const educations = sortEducations(user.educations);
+
   return (
     <div className="glass-effect rounded-xl p-6 border border-gray-200/30 hover:border-blue-300/50 transition-all duration-300 hover:shadow-lg group">
       <div className="flex items-start space-x-4">
@@ -83,9 +86,8 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
               </h3>
               <div className="flex items-center space-x-2 mt-1">
                 <Briefcase className="w-4 h-4 text-gray-400" strokeWidth={1.5} />
-                <p className="text-sm text-gray-600 font-light">{user.jobTitle}</p>
+                <p className="text-sm text-gray-600 font-light">{`${experiences[0].jobTitle} @ ${experiences[0].companyName}`}</p>
               </div>
-              <p className="text-sm text-gray-500 font-light mt-1">{user.companyName}</p>
             </div>
           </div>
 
@@ -94,7 +96,7 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
             {user.experiences[user.experiences.length - 1].location && (
               <div className="flex items-center space-x-2 text-sm text-gray-500">
                 <MapPin className="w-4 h-4" strokeWidth={1.5} />
-                <span className="font-light">{user.experiences[user.experiences.length - 1].location}</span>
+                <span className="font-light">{experiences[0].location}</span>
               </div>
             )}
             
