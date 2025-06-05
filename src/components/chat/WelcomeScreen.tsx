@@ -70,24 +70,22 @@ export default function WelcomeScreen() {
     };
 
     return (
-        <div className="chat-container">
-            <main className="chat-main">
-                <div className="welcome-container max-w-[750px] w-full px-4">
-                    {!isAuthenticated ? (
-                        <AuthRequiredMessage />
-                    ) : (
-                        <>
-                            <div className="welcome-text fade-in-up">
-                                <h1 className="welcome-heading">
-                                    {getGreeting()}
-                                </h1>
-                                <p className="welcome-subheading">How can I help you today?</p>
-                            </div>
-                            <MessageInput onSendMessage={handleSubmit} mode="welcome" />
-                        </>
-                    )}
-                </div>
-            </main>
+        <div className="flex flex-col items-center justify-start h-full pt-[22vh]">
+            <div className="welcome-container max-w-[750px] w-full px-4">
+                {!isAuthenticated ? (
+                    <AuthRequiredMessage />
+                ) : (
+                    <>
+                        <div className="welcome-text fade-in-up">
+                            <h1 className="welcome-heading">
+                                {getGreeting()}
+                            </h1>
+                            <p className="welcome-subheading">How can I help you today?</p>
+                        </div>
+                        <MessageInput onSendMessage={handleSubmit} mode="welcome" />
+                    </>
+                )}
+            </div>
         </div>
     );
 }

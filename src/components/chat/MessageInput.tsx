@@ -60,8 +60,8 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                 className="
                     flex flex-col w-full
                     bg-white
-                    rounded-3xl px-3 pb-1 pt-2
-                    gap-y-2 shadow-md
+                    rounded-3xl pl-[10px] pr-[8px] py-[8px]
+                    gap-y-1 shadow-md
                     border border-solid border-gray-200 rounded-3xl
                 "
             >
@@ -81,13 +81,13 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                     style={{ lineHeight: "1.4" }}
                 />
 
-                <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center justify-between mt-[6px]">
                     <div className="flex space-x-2">
                         <button
                             type="button"
                             onClick={() => setDeep(p => !p)}
                             className={`
-                                px-4 py-1 rounded-full text-sm transition-colors
+                                px-2 py-1 rounded-full text-sm transition-colors
                                 ${
                                     deep
                                         ? "bg-blue-50 border border-blue-200/50"
@@ -101,7 +101,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
                             type="button"
                             onClick={() => setNetwork(p => !p)}
                             className={`
-                                px-4 py-1 rounded-full text-sm transition-colors
+                                px-2 py-1 rounded-full text-sm transition-colors
                                 ${
                                     network
                                         ? "bg-blue-50 border border-blue-200/50"
