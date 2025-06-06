@@ -116,7 +116,7 @@ export const useChat = () => {
         const fetchedSessions = await searchService.getUserSessions();
         if (!fetchedSessions || fetchedSessions.length === 0) return;
         
-        const sessionTypes: Session[] = fetchedSessions.map((session: any) => ({
+        const sessionTypes: Session[] = fetchedSessions.map((session: {session_id: string; title: string; created_at: string; user_id: string}) => ({
             sessionID: session.session_id,
             title: session.title,
             createdAt: session.created_at,

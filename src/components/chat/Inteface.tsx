@@ -121,7 +121,7 @@ const Interface = ({
                         </div>
                     }
                     artifactPanel={
-                        <ArtifactPanel searchResult={searchResult} isVisible={showArtifactPanel} />
+                        <ArtifactPanel usersFound={searchResult?.usersFound || []} isVisible={showArtifactPanel} />
                     }
                     showArtifactPanel={showArtifactPanel}
                 />

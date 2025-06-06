@@ -223,7 +223,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
                         <div className="mt-4 space-y-3">
                           {activeQuery === 'consulting' ? (
                             // Profile cards for people search
-                            (queries.consulting.bullets as any[]).map((profile, index) => (
+                            (queries.consulting.bullets as Array<{name: string; title: string; previous: string; detail: string}>).map((profile, index) => (
                               <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                                 <div className="bg-white/80 rounded-xl p-4 border border-white/40 hover:bg-white transition-colors w-full">
                                   <div className="flex items-start space-x-3 w-full">
@@ -246,7 +246,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
                             ))
                           ) : activeQuery === 'skills' ? (
                             // Skills demand display
-                            (queries.skills.bullets as any[]).map((skill, index) => (
+                            (queries.skills.bullets as Array<{skill: string; demand: string; growth: string}>).map((skill, index) => (
                               <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                                 <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4 border border-orange-200 w-full">
                                   <div className="flex items-center justify-between w-full">
@@ -270,7 +270,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
                             ))
                           ) : (
                             // Geographic distribution display
-                            (queries.remote.bullets as any[]).map((geo, index) => (
+                            (queries.remote.bullets as Array<{location: string; percentage: string; trend: string}>).map((geo, index) => (
                               <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200 w-full">
                                   <div className="flex items-center justify-between w-full">

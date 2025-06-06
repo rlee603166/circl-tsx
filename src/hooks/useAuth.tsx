@@ -10,7 +10,7 @@ interface UseAuthReturn {
     loading: boolean;
     hasJWT: boolean;
     user: User | null;
-    session: any;
+    session: Session | null;
     isAuthenticated: boolean;
     logout: () => void;
 }
