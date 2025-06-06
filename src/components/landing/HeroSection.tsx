@@ -66,9 +66,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-gray-900 leading-tight mb-8 tracking-tight">
-              Ask career questions.<br />
-              Get answers.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-500">Instantly.</span>
+              Ask smarter. See further.<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-500"> Decide with confidence.</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 font-light mx-auto mb-12">
               The future of network discovery is coming. Be the first to experience it.

@@ -38,7 +38,7 @@ const InsightCards = () => {
             <Card 
               icon={<TrendingUp className="w-7 h-7" />}
               title="See Patterns"
-              description="Uncover patterns. Trace real career moves, pivotal turns, and what came next."
+              description="Uncover patterns. Trace real career moves, pivotal turns, and what came next for people like you."
             />
             
             <Card 

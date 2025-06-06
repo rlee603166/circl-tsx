@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
 const queries = [
-  "Where do ex-YC founders go after their first startup winds down?",
-  "Ex-AI researchers from DeepMind now working in robotics startups",
-  "Ex-MBB consultants who became Chief of Staff at Series A companies",
-  "Crypto operators who pivoted into climate or defense in 2024–25",
-  "Ex-FANG PMs who joined sub-20 person AI infra startups",
-  "Founders in healthcare AI who started as academic researchers",
-  "Startup COOs who were previously in education or nonprofit work",
-  "Ex-Palantir engineers who became solo founders post-2023",
-  "Designers who transitioned into Head of Product roles",
-  "Where did OpenAI alumni from 2022–2023 end up?",
-  "People who left Bridgewater and later raised VC funding",
-  "Ex-bankers now building fintech products in LATAM",
-  "Operators who left unicorns in 2023 and joined seed-stage companies",
-  "What kind of people do a16z repeatedly back in AI?",
-  "VCs who used to be startup lawyers or policy analysts",
-  "Where do crypto founders go after shutting down their startups?"
+  "Who left Goldman Sachs for fintech startups?",
+  "How long do engineers spend at each company?",
+  "What percentage of CTOs have computer science degrees?",
+  "Which cities do remote workers actually live in?",
+  "Stanford MBA graduates who became solo founders",
+  "Average time from junior to senior engineer role",
+  "Top universities for unicorn startup founders", 
+  "Engineers with both Google and Meta experience",
+  "What do successful Head of Sales backgrounds look like?",
+  "What do people do during their gap year?",
+  "Most common career pivot points for consultants",
+  "Which coding bootcamps produce the most startup CTOs?",
+  "Average number of years students take off before starting med school",
+  "Geographic distribution of venture capital partners",
+  "Common side projects among successful founders",
+  "Career timelines of billion-dollar startup CTOs"
 ];
 
 const QueryExamples = () => {

@@ -29,16 +29,18 @@ const Footer: React.FC<FooterProps> = ({ openWaitlistModal }) => {
             <span className="text-xl font-light text-gray-900">Circl</span>
           </div>
           
-          <div className="flex gap-8">
-            <a href="#" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
-              About
-            </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
-              Contact
-            </a>
-            <a href="#" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
-              Privacy
-            </a>
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <div className="flex gap-8">
+              <a href="#" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
+                About
+              </a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
+                Contact
+              </a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
+                Privacy
+              </a>
+            </div>
           </div>
           
           <div className="flex items-center gap-4">
@@ -57,13 +59,6 @@ const Footer: React.FC<FooterProps> = ({ openWaitlistModal }) => {
                 Join
               </button>
             </div>
-            
-            <button 
-              onClick={scrollToTop}
-              className="w-10 h-10 rounded-full bg-gray-50 hover:bg-gray-100 flex items-center justify-center text-gray-600 hover:text-gray-900 border border-gray-200 transition-all"
-            >
-              <ArrowUp className="w-5 h-5" />
-            </button>
           </div>
         </div>
         

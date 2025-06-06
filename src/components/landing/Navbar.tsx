@@ -52,19 +52,19 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
             Examples
           </a>
           <a href="#cta" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
-            Get Started
+            Demo
           </a>
           <button 
             onClick={handleSignInClick}
-            className="ml-4 px-5 py-2 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm font-light transition-all"
+            className="ml-4 px-5 py-4 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-light transition-all"
           >
             Sign In
           </button>
           <button 
             onClick={handleJoinWaitlistClick} 
-            className="px-5 py-2 rounded-full bg-purple-600 text-white text-sm font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all"
+            className="px-5 py-4 rounded-full bg-purple-600 text-white text-sm font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all"
           >
-            Get Early Access
+            Get Started
           </button>
         </nav>
 
