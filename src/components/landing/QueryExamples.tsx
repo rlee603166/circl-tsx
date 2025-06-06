@@ -35,20 +35,20 @@ const QueryExamples = () => {
   return (
     <section id="examples" className="py-20 px-6 md:px-10 lg:px-0 bg-white">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-light text-center text-gray-900 mb-8">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-center text-gray-900 mb-6 md:mb-8">
           Ask anything about careers
         </h2>
-        <p className="text-xl md:text-2xl text-gray-600 font-light text-center max-w-3xl mx-auto mb-16">
+        <p className="text-lg md:text-xl lg:text-2xl text-gray-600 font-light text-center max-w-3xl mx-auto mb-12 md:mb-16">
           Discover hidden professional patterns with conversational queries
         </p>
         
         <div className="max-w-6xl mx-auto">
-          <div className="relative h-36 overflow-hidden rounded-2xl backdrop-blur-xl bg-white/30 border border-gray-200/50 shadow-lg">
+          <div className="relative h-32 md:h-36 overflow-hidden rounded-2xl backdrop-blur-xl bg-white/30 border border-gray-200/50 shadow-lg">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             {queries.map((query, index) => (
               <div
                 key={index}
-                className={`absolute inset-0 flex items-center justify-center px-10 transition-all duration-1000 ${
+                className={`absolute inset-0 flex items-center justify-center px-6 md:px-10 transition-all duration-1000 ${
                   index === currentQuery
                     ? "opacity-100 transform translate-y-0"
                     : index < currentQuery
@@ -56,17 +56,17 @@ const QueryExamples = () => {
                       : "opacity-0 transform translate-y-full"
                 }`}
               >
-                <p className="text-xl md:text-2xl font-light text-gray-700 text-center">"{query}"</p>
+                <p className="text-base md:text-xl lg:text-2xl font-light text-gray-700 text-center">"{query}"</p>
               </div>
             ))}
           </div>
 
-          <div className="flex justify-center mt-8 space-x-3">
+          <div className="flex justify-center mt-6 md:mt-8 space-x-2 md:space-x-3">
             {queries.map((_, index) => (
               <button
                 key={index}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  index === currentQuery ? "bg-purple-500 w-10" : "bg-gray-300"
+                className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-300 ${
+                  index === currentQuery ? "bg-purple-500 w-8 md:w-10" : "bg-gray-300"
                 }`}
                 onClick={() => setCurrentQuery(index)}
               />

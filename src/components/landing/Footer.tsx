@@ -29,8 +29,8 @@ const Footer: React.FC<FooterProps> = ({ openWaitlistModal }) => {
             <span className="text-xl font-light text-gray-900">Circl</span>
           </div>
           
-          <div className="absolute left-1/2 transform -translate-x-1/2">
-            <div className="flex gap-8">
+          <div className="order-3 md:order-2">
+            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
               <a href="#" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
                 About
               </a>
@@ -43,14 +43,14 @@ const Footer: React.FC<FooterProps> = ({ openWaitlistModal }) => {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="relative">
+          <div className="flex items-center gap-4 order-2 md:order-3 w-full md:w-auto">
+            <div className="relative w-full md:w-auto">
               <input 
                 type="email" 
                 placeholder="Enter email for waitlist"
                 value={footerEmail}
                 onChange={(e) => setFooterEmail(e.target.value)}
-                className="w-64 py-2.5 px-4 rounded-full bg-gray-50 border border-gray-200 focus:border-gray-300 outline-none text-gray-700 text-sm placeholder:text-gray-400" 
+                className="w-full md:w-64 py-2.5 px-4 pr-16 rounded-full bg-gray-50 border border-gray-200 focus:border-gray-300 outline-none text-gray-700 text-sm placeholder:text-gray-400" 
               />
               <button 
                 onClick={handleJoinClick}
