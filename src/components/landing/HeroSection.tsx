@@ -206,7 +206,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
           </div>
           
           <div className="relative">
-              <div className="backdrop-blur-xl bg-white/40 rounded-3xl border border-white/20 shadow-2xl p-6 md:p-8 lg:p-10 relative overflow-hidden w-full max-w-4xl mx-auto">
+              <div className="backdrop-blur-xl bg-white/40 rounded-3xl border border-white/20 shadow-2xl p-6 md:p-10 relative overflow-hidden w-full max-w-4xl mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent pointer-events-none" />
                 <div className="relative">
                   <div className="flex items-center space-x-3 mb-6 md:mb-8">
@@ -254,8 +254,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
                                       {profile.name.split(' ').map((n: string) => n[0]).join('')}
                                     </div>
                                     <div className="flex-1 min-w-0 overflow-hidden">
-                                      <div className="flex flex-col gap-1 md:gap-2 mb-1">
-                                        <h4 className="font-medium text-slate-800 text-sm md:text-base flex-shrink-0">{profile.name}</h4>
+                                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 md:gap-2 mb-1">
+                                        <h4 className="font-medium text-slate-800 text-sm flex-shrink-0">{profile.name}</h4>
                                         <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full w-fit">
                                           {profile.previous}
                                         </span>
@@ -275,7 +275,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
                                   <div className="flex items-center justify-between w-full">
                                     <div className="flex-1 pr-2">
                                       <h4 className="font-medium text-slate-800 text-xs md:text-sm mb-1">{item.category || item.path}</h4>
-                                      <p className="text-emerald-700 text-sm md:text-base font-light">{item.percentage || item.duration}</p>
+                                      <p className="text-emerald-700 text-sm font-light">{item.percentage || item.duration}</p>
                                     </div>
                                     <div className="text-right">
                                       <p className="text-xs text-slate-500 mb-1">Pattern</p>

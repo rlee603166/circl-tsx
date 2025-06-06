@@ -208,7 +208,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
                     
                     <div className={`bg-gradient-to-r from-slate-50 to-white rounded-xl text-left transition-all duration-700 ease-out ${
                       showAnswer 
-                        ? 'opacity-100 max-h-96 p-4 md:p-6 transform translate-y-0' 
+                        ? 'opacity-100 max-h-[600px] p-4 md:p-6 transform translate-y-0' 
                         : 'opacity-0 max-h-0 p-0 transform -translate-y-2 pointer-events-none'
                     }`}>
                       <div className="break-words">
@@ -231,7 +231,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
                                       {profile.name.split(' ').map((n: string) => n[0]).join('')}
                                     </div>
                                     <div className="flex-1 min-w-0 overflow-hidden">
-                                      <div className="flex flex-col gap-1 md:gap-2 mb-1">
+                                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 md:gap-2 mb-1">
                                         <h4 className="font-medium text-slate-800 text-sm md:text-base flex-shrink-0">{profile.name}</h4>
                                         <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full w-fit">
                                           {profile.previous}
