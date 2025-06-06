@@ -206,9 +206,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
           </div>
           
           <div className="relative">
-              <div className="backdrop-blur-xl bg-white/40 rounded-3xl border border-white/20 shadow-2xl p-6 md:p-10 relative overflow-hidden w-full max-w-4xl mx-auto">
+              <div className="backdrop-blur-xl bg-white/40 rounded-3xl border border-white/20 shadow-2xl p-6 md:p-10 relative overflow-hidden w-full max-w-4xl mx-auto min-h-[400px] md:min-h-[450px]">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent pointer-events-none" />
-                <div className="relative">
+                <div className="relative h-full flex flex-col justify-start">
                   <div className="flex items-center space-x-3 mb-6 md:mb-8">
                     <div className="w-3 h-3 md:w-3.5 md:h-3.5 bg-red-400 rounded-full" />
                     <div className="w-3 h-3 md:w-3.5 md:h-3.5 bg-yellow-400 rounded-full" />
@@ -231,9 +231,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
                     {/* Smooth expansion with max-height and transform */}
                     <div className={`bg-gradient-to-r from-slate-50 to-white rounded-xl overflow-hidden text-left transition-all duration-700 ease-out ${
                       showAnswer 
-                        ? 'opacity-100 max-h-[500px] p-4 md:p-6 transform translate-y-0' 
+                        ? 'opacity-100 max-h-[600px] p-4 md:p-6 transform translate-y-0' 
                         : 'opacity-0 max-h-0 p-0 transform -translate-y-2 pointer-events-none'
-                    }`}>
+                    } min-h-0`}>
                       <div className="break-words overflow-hidden">
                         <p className="text-slate-700 font-light leading-relaxed text-base md:text-lg mb-3 md:mb-4">
                           {showAnswer ? answerText : ''}
