@@ -246,7 +246,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
                         <div className="mt-3 md:mt-4 space-y-2 md:space-y-3">
                           {queries[currentSlide].type === 'profiles' ? (
                             // Profile cards for people search
-                            (queries[currentSlide].bullets as any[]).map((profile, index) => (
+                            (queries[currentSlide].bullets as Array<{name: string; title: string; previous: string; detail: string}>).map((profile, index) => (
                               <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                                 <div className="bg-white/80 rounded-xl p-3 md:p-4 border border-white/40 hover:bg-white transition-colors w-full">
                                   <div className="flex items-start space-x-2 md:space-x-3 w-full">
@@ -269,7 +269,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
                             ))
                           ) : queries[currentSlide].type === 'education' || queries[currentSlide].type === 'career' ? (
                             // Education/Career patterns display
-                            (queries[currentSlide].bullets as any[]).map((item, index) => (
+                            (queries[currentSlide].bullets as Array<{category?: string; path?: string; percentage?: string; duration?: string; trend: string}>).map((item, index) => (
                               <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                                 <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-3 md:p-4 border border-emerald-200 w-full">
                                   <div className="flex items-center justify-between w-full">
@@ -289,7 +289,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
                             ))
                           ) : (
                             // Geographic distribution display
-                            (queries[currentSlide].bullets as any[]).map((geo, index) => (
+                            (queries[currentSlide].bullets as Array<{location: string; percentage: string; trend: string}>).map((geo, index) => (
                               <div key={index} className={`transition-all duration-500 ${showBullets[index] ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-3 md:p-4 border border-blue-200 w-full">
                                   <div className="flex items-center justify-between w-full">
