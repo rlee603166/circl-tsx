@@ -5,7 +5,6 @@ interface HeroSectionProps {
   openWaitlistModal: (email?: string) => void;
 }
 
-// Stop scrolling LinkedIn. Start discovering your network.
 const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
   // Animation states for carousel
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -64,7 +63,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
         },
         {
           name: "Amanda Foster",
-          title: "CEO at Mercury",
+          title: "CEO at Moonshot",
           previous: "Stanford MBA '17",
           detail: "Revolutionizing banking for startups"
         },
@@ -105,7 +104,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
         },
         {
           name: "Alex Thompson",
-          title: "Co-founder at Cursor",
+          title: "Co-founder at Builder.io",
           previous: "Google → Meta → Startup",
           detail: "Building AI-powered development tools"
         }
@@ -201,7 +200,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-500"> Decide with confidence.</span>
             </h1>
             <p className="text-lg md:text-xl lg:text-2xl text-gray-600 font-light mx-auto mb-12">
-              The future of network discovery is coming. Be the first to experience it.
+              The future of network intelligence is coming. Be the first to experience it.
             </p>
           </div>
           

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { CircleUser, ArrowUp } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
+import CirclLogo from '@/components/ui/CirclLogo';
 
 interface FooterProps {
   openWaitlistModal: (email?: string) => void;
@@ -24,10 +25,7 @@ const Footer: React.FC<FooterProps> = ({ openWaitlistModal }) => {
     <footer className="py-16 px-6 md:px-10 lg:px-0 border-t border-gray-100">
       <div className="container mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2">
-            <CircleUser className="h-6 w-6 text-purple-500" />
-            <span className="text-xl font-light text-gray-900">Circl</span>
-          </div>
+          <CirclLogo size={30} textSize="text-xl" />
           
           <div className="order-3 md:order-2">
             <div className="flex flex-wrap justify-center gap-6 md:gap-8">

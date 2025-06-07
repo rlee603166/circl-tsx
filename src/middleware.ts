@@ -14,6 +14,8 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith('/static/') ||
     pathname.includes('.') ||
     pathname === '/welcome' ||
+    pathname === '/welcome?mode=login' ||
+    pathname === '/welcome?mode=signup' ||
     pathname === '/login' ||
     pathname === '/create-account' || 
     pathname === '/about'

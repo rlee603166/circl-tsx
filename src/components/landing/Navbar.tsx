@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CircleUser } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import CirclLogo from '@/components/ui/CirclLogo';
 
 interface NavbarProps {
   openWaitlistModal: (email?: string) => void;
@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
   };
 
   const handleSignInClick = () => {
-    router.push('/login');
+    router.push('/welcome?mode=login');
     setIsMobileMenuOpen(false);
   };
 
@@ -38,11 +38,8 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
           : 'py-5 bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <CircleUser className="h-8 w-8 text-purple-500" />
-          <span className="text-2xl font-light tracking-tight text-gray-900">Circl</span>
-        </div>
+      <div className="container mx-auto px-0 flex items-center justify-between">
+        <CirclLogo />
 
         <nav className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
@@ -54,12 +51,12 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
           <a href="#cta" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
             Demo
           </a>
-          <button 
+          {/* <button 
             onClick={handleSignInClick}
             className="ml-4 px-5 py-4 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-light transition-all"
           >
             Sign In
-          </button>
+          </button> */}
           <button 
             onClick={handleJoinWaitlistClick} 
             className="px-5 py-4 rounded-full bg-purple-600 text-white text-sm font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all"
@@ -81,7 +78,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
       </div>
 
       <div className={`md:hidden transition-all duration-500 ease-in-out ${isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-white`}>
-        <div className="container mx-auto px-6 py-4 flex flex-col gap-4">
+        <div className="container mx-auto px-0 py-4 flex flex-col gap-4">
           <a 
             href="#features" 
             className="text-gray-600 hover:text-gray-900 py-2 text-lg font-light transition-colors"
@@ -101,20 +98,20 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
             className="text-gray-600 hover:text-gray-900 py-2 text-lg font-light transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Get Started
+            Demo
           </a>
           <div className="flex flex-col gap-3 pt-4">
-            <button 
+            {/* <button 
               onClick={handleSignInClick}
               className="w-full py-2.5 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-light transition-all"
             >
               Sign In
-            </button>
+            </button> */}
             <button 
               onClick={handleJoinWaitlistClick} 
               className="w-full py-2.5 rounded-full bg-purple-600 text-white font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all"
             >
-              Join Waitlist
+              Get Started
             </button>
           </div>
         </div>

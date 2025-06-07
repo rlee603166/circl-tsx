@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { ClientSafeProvider, getProviders, LiteralUnion, signIn } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers/index";
+import CirclLogo from '@/components/ui/CirclLogo';
 
 const WelcomeScreen = () => {
   const router = useRouter();
@@ -241,7 +242,8 @@ const WelcomeScreen = () => {
   };
 
   const toggleMode = () => {
-    setIsLogin(!isLogin);
+    const newIsLogin = !isLogin;
+    setIsLogin(newIsLogin);
     setShowPassword(false);
     setEmail('');
     setPassword('');
@@ -249,6 +251,13 @@ const WelcomeScreen = () => {
     setPasswordError('');
     setEmailFocused(false);
     setPasswordFocused(false);
+    
+    // Update URL based on mode
+    if (newIsLogin) {
+      router.push('/welcome?mode=login');
+    } else {
+      router.push('/welcome?mode=signup');
+    }
   };
 
   // Show loading spinner while checking authentication
@@ -263,8 +272,12 @@ const WelcomeScreen = () => {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row relative">
       {/* Header */}
-      <div className="cursor-pointer absolute top-5 left-7 z-10" onClick={() => router.push("/")}>
-        <h1 className="text-2xl font-bold text-black">circl.</h1>
+      <div className="fixed top-0 left-0 right-0 z-10 py-5">
+        <div className="container mx-auto px-0">
+          <div className="cursor-pointer w-fit" onClick={() => router.push("/")}>
+            <CirclLogo />
+          </div>
+        </div>
       </div>
 
       {/* Left Side - Login Card */}
