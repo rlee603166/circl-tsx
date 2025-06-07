@@ -27,14 +27,14 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
         },
         { 
           name: "Ahmed Hassan", 
-          title: "Head of Operations at Airbnb", 
-          previous: "Former McKinsey Senior Associate",
+          title: "Operations at Airbnb", 
+          previous: "Ex-McKinsey Associate",
           detail: "Optimizing global host acquisition programs"
         },
         { 
           name: "Emily Rodriguez", 
           title: "VP Product Strategy at Spotify", 
-          previous: "McKinsey Engagement Manager",
+          previous: "Ex-McKinsey EM",
           detail: "Driving international market penetration"
         }
       ]

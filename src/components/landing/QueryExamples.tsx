@@ -66,7 +66,7 @@ const QueryExamples = () => {
               <button
                 key={index}
                 className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-300 ${
-                  index === currentQuery ? "bg-purple-500 w-8 md:w-10" : "bg-gray-300"
+                  index === currentQuery ? "bg-purple-500 md:w-10" : "bg-gray-300"
                 }`}
                 onClick={() => setCurrentQuery(index)}
               />
