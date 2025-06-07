@@ -394,7 +394,7 @@ const WelcomeScreen = () => {
               Object.values(providers).map(provider => (
                 <div key={provider.name} className="space-y-3 mb-4">
                   <button
-                    onClick={() => signIn(provider.id, { callbackUrl: "/" })}
+                    onClick={() => signIn(provider.id, { callbackUrl: "/new" })}
                     className="cursor-pointer w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200"
                   >
                     <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
