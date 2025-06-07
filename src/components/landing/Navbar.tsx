@@ -48,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
           <a href="#examples" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
             Examples
           </a>
-          <a href="#demo" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
+          <a href="#cta" className="text-gray-600 hover:text-gray-900 text-sm font-light transition-colors">
             Demo
           </a>
           {/* <button 
@@ -94,7 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
             Examples
           </a>
           <a 
-            href="#demo" 
+            href="#cta" 
             className="text-gray-600 hover:text-gray-900 py-2 text-lg font-light transition-colors"
             onClick={() => setIsMobileMenuOpen(false)}
           >
