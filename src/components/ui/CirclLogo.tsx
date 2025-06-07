@@ -23,11 +23,11 @@ const BASE_ICON = 30; // px
 const BASE_FONT = 20; // px ≈ Tailwind text-2xl
 
 const CirclLogo: React.FC<CirclLogoProps> = ({
-  scale = 1.5,
-  gapDegrees = 40,
+  scale = 1.3,
+  gapDegrees = 90,
   gapCenterDeg = 270,
   innerRadius = 20,
-  innerGapDegrees = 70,
+  innerGapDegrees = 60,
   innerGapCenterDeg = gapCenterDeg + 180,
   showOuterNodes = false,
   showInnerNodes = false,
