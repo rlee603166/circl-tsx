@@ -38,7 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
           : 'py-5 bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-0 flex items-center justify-between">
+      <div className="container mx-auto px-6 flex items-center justify-between">
         <CirclLogo />
 
         <nav className="hidden md:flex items-center gap-8">
@@ -84,7 +84,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
       </div>
 
       <div className={`md:hidden transition-all duration-500 ease-in-out ${isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-white`}>
-        <div className="container mx-auto px-0 py-4 flex flex-col gap-4">
+        <div className="container mx-auto px-6 py-4 flex flex-col gap-4">
           <a 
             href="#features" 
             className="text-gray-600 hover:text-gray-900 py-2 text-lg font-light transition-colors"

@@ -28,13 +28,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
         },
         { 
           name: "Marcus Johnson", 
-          title: "Product Manager → VP Product", 
+          title: "Product Manager → Head of Operations", 
           previous: "Parallel Career Path",
           detail: "Scaled from IC to leadership in high-growth fintech"
         },
         { 
           name: "Lisa Rodriguez", 
-          title: "Product Manager → Head of Product", 
+          title: "Product Manager → VP of Product", 
           previous: "Comparable Journey",
           detail: "Built design-focused products at leading design tools company"
         }

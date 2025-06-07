@@ -59,7 +59,7 @@ const WelcomeScreen = () => {
           name: "Jasmine Patel",
           title: "Private Equity → Head of Strategy",
           previous: "Analyst at Blackstone",
-          detail: "Joined a healthtech unicorn’s executive team post-MBA"
+          detail: "Joined a healthtech unicorn's executive team post-MBA"
         }
       ]
     },    
@@ -273,7 +273,7 @@ const WelcomeScreen = () => {
     <div className="min-h-screen flex flex-col lg:flex-row relative">
       {/* Header */}
       <div className="fixed top-0 left-0 right-0 z-10 py-5">
-        <div className="container mx-auto px-0">
+        <div className="container mx-auto px-6">
           <div className="cursor-pointer w-fit" onClick={() => router.push("/")}>
             <CirclLogo />
           </div>
