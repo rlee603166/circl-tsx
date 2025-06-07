@@ -9,6 +9,8 @@ import { Menu } from "lucide-react";
 import { UserFound } from "@/types";
 import { useRouter } from "next/navigation";
 
+// vercel annoying
+
 const ChatLayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const router = useRouter();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
