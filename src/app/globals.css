@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 /* 🌐 CSS Variables and Theme */
 @layer base {
   :root {

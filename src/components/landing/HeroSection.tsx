@@ -16,27 +16,27 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openWaitlistModal }) => {
   
   const queries = [
     {
-      question: "Where did ex-Google PMs go?",
-      answer: "I found 47 former Google Product Managers who made interesting moves:",
+      question: "Where do people like me end up in 5 years?",
+      answer: "Based on your background, here are common career trajectories:",
       type: "profiles",
       bullets: [
         { 
           name: "Sarah Chen", 
-          title: "Co-founder at Notion", 
-          previous: "Ex-Google PM",
-          detail: "Building the future of collaborative workspaces"
+          title: "Senior Product Manager → Co-founder", 
+          previous: "Similar Background",
+          detail: "Leveraged PM experience to start consumer tech company"
         },
         { 
           name: "Marcus Johnson", 
-          title: "VP Product at Stripe", 
-          previous: "Former Google Payments PM",
-          detail: "Leading global payment infrastructure"
+          title: "Product Manager → VP Product", 
+          previous: "Parallel Career Path",
+          detail: "Scaled from IC to leadership in high-growth fintech"
         },
         { 
           name: "Lisa Rodriguez", 
-          title: "Head of Product at Figma", 
-          previous: "Google Design Platform PM",
-          detail: "Revolutionizing design collaboration tools"
+          title: "Product Manager → Head of Product", 
+          previous: "Comparable Journey",
+          detail: "Built design-focused products at leading design tools company"
         }
       ]
     },

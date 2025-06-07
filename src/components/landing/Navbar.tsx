@@ -57,11 +57,17 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
           >
             Sign In
           </button> */}
-          <button 
-            onClick={handleJoinWaitlistClick} 
-            className="px-5 py-4 rounded-full bg-purple-600 text-white text-sm font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all"
+          <button
+            onClick={handleJoinWaitlistClick}
+            className="relative overflow-hidden rounded-full p-0.5 shadow-lg shadow-purple-200"
           >
-            Get Started
+            <div
+              className="absolute inset-0 rounded-full bg-[conic-gradient(from_var(--border-angle),_theme(colors.purple.400),_theme(colors.pink.500),_theme(colors.red.500))] animate-border-gleam"
+              aria-hidden="true"
+            />
+            <div className="relative rounded-full bg-purple-600 px-5 py-4 text-sm font-light text-white transition-colors hover:bg-purple-700">
+              Get Started
+            </div>
           </button>
         </nav>
 
@@ -107,11 +113,17 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
             >
               Sign In
             </button> */}
-            <button 
-              onClick={handleJoinWaitlistClick} 
-              className="w-full py-2.5 rounded-full bg-purple-600 text-white font-light shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all"
+            <button
+              onClick={handleJoinWaitlistClick}
+              className="relative w-full overflow-hidden rounded-full p-0.5 shadow-lg shadow-purple-200"
             >
-              Get Started
+              <div
+                className="absolute inset-0 rounded-full bg-[conic-gradient(from_var(--border-angle),_theme(colors.purple.400),_theme(colors.pink.600),_theme(colors.red.500))] animate-border-gleam"
+                aria-hidden="true"
+              />
+              <div className="relative w-full rounded-full bg-purple-600 py-2.5 text-center font-light text-white transition-colors hover:bg-purple-700">
+                Get Started
+              </div>
             </button>
           </div>
         </div>

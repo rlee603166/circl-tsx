@@ -39,30 +39,30 @@ const WelcomeScreen = () => {
   
   const queries = [
     {
-      question: "Who left Goldman Sachs for fintech startups?",
-      answer: "I found 18 former Goldman Sachs employees now at fintech companies:",
+      question: "What do people with my background do after business school?",
+      answer: "Based on similar profiles, here's where people like you go post-MBA:",
       type: "profiles",
       bullets: [
-        { 
-          name: "David Kim", 
-          title: "VP Engineering at Stripe", 
-          previous: "Ex-Goldman Tech",
-          detail: "Leading payment infrastructure scaling"
+        {
+          name: "Anika Shah",
+          title: "Consultant → VC Associate",
+          previous: "Strategy at Deloitte",
+          detail: "Used MBA to pivot into early-stage investing at a top VC firm"
         },
-        { 
-          name: "Rachel Martinez", 
-          title: "Head of Risk at Robinhood", 
-          previous: "Former GS Risk Analyst",
-          detail: "Building algorithmic trading safeguards"
+        {
+          name: "Leo Tran",
+          title: "Product Manager → Founder",
+          previous: "Pre-MBA PM at Meta",
+          detail: "Launched edtech startup focused on AI-driven tutoring"
         },
-        { 
-          name: "Alex Chen", 
-          title: "Co-founder at Ramp", 
-          previous: "Goldman Investment Banking",
-          detail: "Revolutionizing corporate expense management"
+        {
+          name: "Jasmine Patel",
+          title: "Private Equity → Head of Strategy",
+          previous: "Analyst at Blackstone",
+          detail: "Joined a healthtech unicorn’s executive team post-MBA"
         }
       ]
-    },
+    },    
     {
       question: "How long do engineers spend at each company?",
       answer: "Based on 2,400+ engineer resumes, here's the typical tenure patterns:",
@@ -99,8 +99,8 @@ const WelcomeScreen = () => {
       ]
     },
     {
-      question: "Where do Y Combinator founders relocate?",
-      answer: "Geographic movement analysis of 450 YC alumni over 3 years:",
+      question: "Where do startup founders from Stanford relocate?",
+      answer: "Geographic movement analysis of 450 Stanford founders over 3 years:",
       type: "geographic",
       bullets: [
         { location: "San Francisco Bay Area", percentage: "68%", trend: "↑ 12%" },
