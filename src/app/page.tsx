@@ -8,12 +8,14 @@ import QueryExamples from '@/components/landing/QueryExamples';
 import CallToAction from '@/components/landing/CallToAction';
 import Footer from '@/components/landing/Footer';
 import WaitlistModal from '@/components/landing/WaitlistModal';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 function App() {
   // Modal state management
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInitialEmail, setModalInitialEmail] = useState('');
+
+  const router = useRouter();
   const searchParams = useSearchParams();
   const referralCode = searchParams ? searchParams.get('referralCode') : null;
 
@@ -24,8 +26,15 @@ function App() {
   };
 
   const handleCloseModal = () => {
+    clearLocalStorage();
+    router.push('/');
     setIsModalOpen(false);
     setModalInitialEmail('');
+  };
+
+  const clearLocalStorage = () => {
+    localStorage.removeItem('waitlist_code');
+    localStorage.removeItem('referral_code');
   };
 
   useEffect(() => {

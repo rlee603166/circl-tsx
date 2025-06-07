@@ -20,6 +20,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
     const storedCode = localStorage.getItem('waitlist_code');
     if (storedCode) {
       setCode(storedCode);
+      localStorage.removeItem("waitlist_code");
     }
   }, []);
 
@@ -53,7 +54,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
     });
 
     const data = await response.json();
-    setUserCode(data.code);
+    setUserCode(data.referralCode);
     setIsSubmitted(true); 
   };
 
@@ -96,6 +97,23 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 sm:px-5 py-3 sm:py-3.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-gray-700 placeholder:text-gray-400 text-md"
                 />
+              </div>
+              
+              <div>
+                <label htmlFor="modal-referral-code" className="sr-only">Referral code</label>
+                <input 
+                  type="text" 
+                  name="referralCode" 
+                  id="modal-referral-code" 
+                  placeholder="Referral code (optional)" 
+                  maxLength={8}
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  className="w-full px-4 sm:px-5 py-3 sm:py-3.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-gray-700 placeholder:text-gray-400 text-md"
+                />
+                {code && code.length !== 8 && (
+                  <p className="mt-1 text-sm text-amber-600">Referral code should be 8 characters</p>
+                )}
               </div>
               
               <button 
