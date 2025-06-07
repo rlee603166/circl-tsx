@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/landing/Navbar';
 import HeroSection from '@/components/landing/HeroSection';
 import InsightCards from '@/components/landing/InsightCards';
@@ -8,11 +8,14 @@ import QueryExamples from '@/components/landing/QueryExamples';
 import CallToAction from '@/components/landing/CallToAction';
 import Footer from '@/components/landing/Footer';
 import WaitlistModal from '@/components/landing/WaitlistModal';
+import { useSearchParams } from 'next/navigation';
 
 function App() {
   // Modal state management
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInitialEmail, setModalInitialEmail] = useState('');
+  const searchParams = useSearchParams();
+  const referralCode = searchParams ? searchParams.get('referralCode') : null;
 
   // Modal control functions
   const handleOpenModal = (email: string = '') => {
@@ -24,6 +27,12 @@ function App() {
     setIsModalOpen(false);
     setModalInitialEmail('');
   };
+
+  useEffect(() => {
+    if (referralCode) {
+      handleOpenModal();
+    }
+  }, [referralCode]);
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-white">

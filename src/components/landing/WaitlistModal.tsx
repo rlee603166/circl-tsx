@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react'; 
+import { ENDPOINTS } from '@/api.config';
 
 interface WaitlistModalProps {
   isOpen: boolean;
@@ -7,9 +8,20 @@ interface WaitlistModalProps {
   initialEmail?: string;
 }
 
+const anon_key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
 const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialEmail }) => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [code, setCode] = useState('');
+  const [userCode, setUserCode] = useState('');
+
+  useEffect(() => {
+    const storedCode = localStorage.getItem('waitlist_code');
+    if (storedCode) {
+      setCode(storedCode);
+    }
+  }, []);
 
   useEffect(() => {
     if (initialEmail) {
@@ -26,10 +38,22 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
     }
   }, [isOpen, initialEmail]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Here you would typically send data to your backend
-    console.log('Waitlist submission:', { email });
+
+    console.log('Waitlist submission:', { email, code });
+
+    const response = await fetch(`${ENDPOINTS.supabase_edge}/join-waitlist`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${anon_key}`,
+      },
+      body: JSON.stringify({ email, code }),
+    });
+
+    const data = await response.json();
+    setUserCode(data.code);
     setIsSubmitted(true); 
   };
 
@@ -90,11 +114,11 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
               <input 
                 type="text" 
                 readOnly 
-                value="https://circl.ai/ref/XYZ123ABC" // This would be dynamically generated
+                value={`https://usecircl.com/ref/${userCode}`} // This would be dynamically generated
                 className="w-full max-w-xs px-3 py-2.5 rounded-lg bg-gray-100 border border-gray-300 text-gray-700 text-sm select-all text-center sm:text-left"
               />
               <button 
-                onClick={() => navigator.clipboard.writeText('https://circl.ai/ref/XYZ123ABC')}
+                onClick={() => navigator.clipboard.writeText(`https://usecircl.com/ref/${userCode}`)}
                 className="ml-2 px-4 py-2.5 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm transition-colors"
               >
                 Copy Link
