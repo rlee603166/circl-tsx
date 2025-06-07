@@ -15,6 +15,8 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [code, setCode] = useState('');
   const [userCode, setUserCode] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const storedCode = localStorage.getItem('waitlist_code');
@@ -33,6 +35,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
   useEffect(() => {
     if (isOpen) {
       setIsSubmitted(false); 
+      setError(''); // Clear any previous errors
       if (!initialEmail) {
         setEmail(''); // Reset email if not pre-filled and modal reopens
       }
@@ -41,21 +44,35 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(''); // Clear any previous errors
+    setIsLoading(true);
 
-    console.log('Waitlist submission:', { email, code });
+    try {
+      console.log('Waitlist submission:', { email, code });
 
-    const response = await fetch(`${ENDPOINTS.supabase_edge}/join-waitlist`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${anon_key}`,
-      },
-      body: JSON.stringify({ email, code }),
-    });
+      const response = await fetch(`${ENDPOINTS.supabase_edge}/join-waitlist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${anon_key}`,
+        },
+        body: JSON.stringify({ email, code }),
+      });
 
-    const data = await response.json();
-    setUserCode(data.referralCode);
-    setIsSubmitted(true); 
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to join waitlist. Please try again.');
+      }
+
+      setUserCode(data.referralCode);
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('Waitlist submission error:', err);
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -83,6 +100,13 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
             <p className="text-gray-600 text-center mb-8 text-sm sm:text-base">
               Be among the first to explore a new way to understand career paths and professional networks. Enter your email to request early access.
             </p>
+            
+            {error && (
+              <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200">
+                <p className="text-red-600 text-sm text-center">{error}</p>
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label htmlFor="modal-email" className="sr-only">Email address</label>
@@ -96,6 +120,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 sm:px-5 py-3 sm:py-3.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-gray-700 placeholder:text-gray-400 text-md"
+                  disabled={isLoading}
                 />
               </div>
               
@@ -110,6 +135,7 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase())}
                   className="w-full px-4 sm:px-5 py-3 sm:py-3.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-gray-700 placeholder:text-gray-400 text-md"
+                  disabled={isLoading}
                 />
                 {code && code.length !== 8 && (
                   <p className="mt-1 text-sm text-amber-600">Referral code should be 8 characters</p>
@@ -118,9 +144,10 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
               
               <button 
                 type="submit" 
-                className="w-full px-6 py-3.5 sm:py-4 rounded-lg bg-purple-600 text-white font-light text-lg shadow-md hover:bg-purple-700 transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                disabled={isLoading}
+                className="w-full px-6 py-3.5 sm:py-4 rounded-lg bg-purple-600 text-white font-light text-lg shadow-md hover:bg-purple-700 transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Request Early Access
+                {isLoading ? 'Submitting...' : 'Request Early Access'}
               </button>
             </form>
           </>

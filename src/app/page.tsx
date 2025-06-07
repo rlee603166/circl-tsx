@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Navbar from '@/components/landing/Navbar';
 import HeroSection from '@/components/landing/HeroSection';
 import InsightCards from '@/components/landing/InsightCards';
@@ -10,7 +10,7 @@ import Footer from '@/components/landing/Footer';
 import WaitlistModal from '@/components/landing/WaitlistModal';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-function App() {
+function AppContent() {
   // Modal state management
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalInitialEmail, setModalInitialEmail] = useState('');
@@ -63,6 +63,14 @@ function App() {
         initialEmail={modalInitialEmail}
       />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AppContent />
+    </Suspense>
   );
 }
 
