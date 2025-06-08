@@ -133,7 +133,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ openWaitlistModal }) => {
               className="px-6 md:px-8 py-3 md:py-4 rounded-full bg-purple-600 text-white font-light text-base md:text-lg shadow-lg shadow-purple-200 hover:bg-purple-700 transition-all hover:scale-105 focus:scale-105"
             >
               <span className="relative z-10">
-                Join the Waitlist
+                Request Access
               </span>
             </button>
             

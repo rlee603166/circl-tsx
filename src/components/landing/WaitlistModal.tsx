@@ -66,6 +66,30 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
       }
 
       setUserCode(data.referralCode);
+      
+      // Send welcome email
+      try {
+        const emailResponse = await fetch('/api/send-welcome-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            email, 
+            referralCode: data.referralCode 
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          console.error('Failed to send welcome email, but waitlist signup was successful');
+        } else {
+          console.log('Welcome email sent successfully');
+        }
+      } catch (emailError) {
+        // Don't fail the whole process if email sending fails
+        console.error('Error sending welcome email:', emailError);
+      }
+
       setIsSubmitted(true);
     } catch (err) {
       console.error('Waitlist submission error:', err);
