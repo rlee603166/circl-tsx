@@ -199,9 +199,7 @@ export default async function handler(
               
               <p>Hi there,</p>
               
-              <p>Thanks for signing up - we're thrilled to have you as one of our early supporters!</p>
-              
-              <p>Circl is rethinking how professionals explore networks and careers. You’re officially on the list to try it first.</p>
+              <p>Thanks for signing up! Circl is rethinking how professionals explore networks and careers. We're thrilled to have you as one of our early supporters!</p>
               
               <div class="benefits">
                 <h3>What to Expect</h3>
@@ -255,7 +253,7 @@ Welcome to the Circl Waitlist! 🎉
 
 Hi there,
 
-Thanks for signing up - we're thrilled to have you as one of our early supporters! Circl is rethinking how professionals explore networks and careers. You’re officially on the list to try it first.
+Thanks for signing up! Circl is rethinking how professionals explore networks and careers. We're thrilled to have you as one of our early supporters!
 
 What to Expect
 - Priority Access: As a waitlist member, you'll be among the first to try Circl
