@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import RootLayoutClient from "./RootLayoutClient";
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 const figtree = Figtree({
@@ -29,7 +30,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={figtree.variable}>
       <body>
-        <RootLayoutClient>{children}</RootLayoutClient>
+        <RootLayoutClient>
+          {children}
+          <Analytics />
+        </RootLayoutClient>
       </body>
     </html>
   );
