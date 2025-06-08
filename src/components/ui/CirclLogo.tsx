@@ -69,19 +69,19 @@ const CirclLogo: React.FC<CirclLogoProps> = ({
         viewBox="0 0 100 100"
         className="inline-block align-baseline"
       >
-        <path d={outer.d} stroke="#111827" strokeWidth={10} fill="none" />
-        <path d={inner.d} stroke="#111827" strokeWidth={10} fill="none" />
+        <path d={outer.d} stroke="#000000" strokeWidth={10} fill="none" />
+        <path d={inner.d} stroke="#000000" strokeWidth={10} fill="none" />
 
         {showOuterNodes && (
           <>
-            <circle cx={outer.start.x} cy={outer.start.y} r={nodeR} fill="#111827" />
-            <circle cx={outer.end.x}   cy={outer.end.y}   r={nodeR} fill="#111827" />
+            <circle cx={outer.start.x} cy={outer.start.y} r={nodeR} fill="#000000" />
+            <circle cx={outer.end.x}   cy={outer.end.y}   r={nodeR} fill="#000000" />
           </>
         )}
         {showInnerNodes && (
           <>
-            <circle cx={inner.start.x} cy={inner.start.y} r={nodeR} fill="#111827" />
-            <circle cx={inner.end.x}   cy={inner.end.y}   r={nodeR} fill="#111827" />
+            <circle cx={inner.start.x} cy={inner.start.y} r={nodeR} fill="#000000" />
+            <circle cx={inner.end.x}   cy={inner.end.y}   r={nodeR} fill="#000000" />
           </>
         )}
       </svg>

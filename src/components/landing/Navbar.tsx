@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
               aria-hidden="true"
             />
             <div className="relative rounded-full bg-purple-600 px-5 py-4 text-sm font-light text-white transition-colors hover:bg-purple-700">
-              Get Started
+              Request Access
             </div>
           </button>
         </nav>
@@ -122,7 +122,7 @@ const Navbar: React.FC<NavbarProps> = ({ openWaitlistModal }) => {
                 aria-hidden="true"
               />
               <div className="relative w-full rounded-full bg-purple-600 py-2.5 text-center font-light text-white transition-colors hover:bg-purple-700">
-                Get Started
+                Request Access
               </div>
             </button>
           </div>
