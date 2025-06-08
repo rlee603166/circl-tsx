@@ -199,12 +199,12 @@ export default async function handler(
               
               <p>Hi there,</p>
               
-              <p>Thank you for joining the Circl waitlist! We're thrilled to have you as one of our early supporters.</p>
+              <p>Thanks for signing up - we're thrilled to have you as one of our early supporters!</p>
               
-              <p>You're now on the list to get early access to Circl - a revolutionary way to explore professional networks and career paths through conversational AI.</p>
+              <p>Circl is rethinking how professionals explore networks and careers. You’re officially on the list to try it first.</p>
               
               <div class="benefits">
-                <h3>What's Next?</h3>
+                <h3>What to Expect</h3>
                 <ul>
                   <li><strong>Priority Access:</strong> As a waitlist member, you'll be among the first to try Circl</li>
                   <li><strong>Exclusive Updates:</strong> We'll keep you informed about our progress and new features</li>
@@ -226,10 +226,10 @@ export default async function handler(
               <p>We're working hard to build something special, and we can't wait to share it with you. In the meantime, here's what you can expect:</p>
               
               <ul>
-                <li>Discover career paths of professionals from top companies</li>
-                <li>Uncover hidden connections in your network</li>
-                <li>Get insights on skills, transitions, and industry trends</li>
-                <li>Ask questions in natural language and get instant answers</li>
+                <li>See how professionals move through industries and roles</li>
+                <li>Reveal hidden connections in your network</li>
+                <li>Explore your network like a map — dynamic, not static</li>
+                <li>Ask anything, get answers — powered by network intelligence</li>
               </ul>
               
               <div style="text-align: center; margin: 40px 0;">
@@ -255,11 +255,9 @@ Welcome to the Circl Waitlist! 🎉
 
 Hi there,
 
-Thank you for joining the Circl waitlist! We're thrilled to have you as one of our early supporters.
+Thanks for signing up - we're thrilled to have you as one of our early supporters! Circl is rethinking how professionals explore networks and careers. You’re officially on the list to try it first.
 
-You're now on the list to get early access to Circl - a revolutionary way to explore professional networks and career paths through conversational AI.
-
-What's Next?
+What to Expect
 - Priority Access: As a waitlist member, you'll be among the first to try Circl
 - Exclusive Updates: We'll keep you informed about our progress and new features
 - Referral Rewards: Invite friends to move up the waitlist and unlock special perks
@@ -274,10 +272,10 @@ For every friend who joins using your link, you'll move up in the queue!
 
 We're working hard to build something special, and we can't wait to share it with you. In the meantime, here's what you can expect:
 
-- Discover career paths of professionals from top companies
-- Uncover hidden connections in your network
-- Get insights on skills, transitions, and industry trends
-- Ask questions in natural language and get instant answers
+- See how professionals move through industries and roles
+- Spot hidden transitions, pivots, and upward paths
+- Explore your network like a map — dynamic, not static
+- Ask anything, get answers — powered by network intelligence
 
 Visit our website: https://usecircl.com
 
