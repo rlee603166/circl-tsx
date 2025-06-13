@@ -50,11 +50,10 @@ const WaitlistModal: React.FC<WaitlistModalProps> = ({ isOpen, onClose, initialE
     try {
       console.log('Waitlist submission:', { email, code });
 
-      const response = await fetch(`${ENDPOINTS.supabase_edge}/join-waitlist`, {
+      const response = await fetch(`/api/waitlist`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${anon_key}`,
         },
         body: JSON.stringify({ email, code }),
       });
