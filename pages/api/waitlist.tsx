@@ -5,13 +5,13 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 type Data = {
   success?: boolean;
-  user?: any;
+  user?: Record<string, unknown>;
   referralCode?: string;
   error?: string;
 };
 
 async function generateUniqueCode(
-  supabase: SupabaseClient<any, "public", any>,
+  supabase: SupabaseClient,
   email: string,
   maxRetries = 10
 ): Promise<string> {
@@ -119,7 +119,11 @@ export default async function handler(
       user: createdUser,
       referralCode: newCode,
     });
-  } catch (err: any) {
-    res.status(500).json({ error: err?.message ?? String(err) });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: String(err) });
+    }
   }
 } 
