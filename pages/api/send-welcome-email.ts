@@ -289,7 +289,7 @@ You're receiving this email because you signed up for the Circl waitlist.
 
     // Send email using Resend
     const data = await resend.emails.send({
-      from: 'Circl <onboarding@resend.dev>',
+      from: 'Circl <onboarding@usecircl.com>',
       to: emailContent.to,
       subject: emailContent.subject,
       html: emailContent.html,
